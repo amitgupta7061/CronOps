@@ -55,12 +55,13 @@ export default function SignupPage() {
         email: formData.email,
         password: formData.password,
       });
-      setAuth(response.data.user, response.data.token);
+      
+      // Redirect to OTP verification page
       toast({
-        title: "Account created!",
-        description: "Welcome to CronOps.",
+        title: "Verification code sent!",
+        description: "Please check your email for the OTP.",
       });
-      router.push("/dashboard");
+      router.push(`/verify?email=${encodeURIComponent(formData.email)}`);
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string } } };
       toast({

@@ -30,14 +30,29 @@ export default function LoginPage() {
 
     try {
       const response = await authApi.login(formData);
-      setAuth(response.data.user, response.data.token);
+      const { user, accessToken, refreshToken } = response.data.data;
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("refreshToken", refreshToken);
+      setAuth(user, accessToken);
       toast({
         title: "Welcome back!",
         description: "You have been logged in successfully.",
       });
       router.push("/dashboard");
     } catch (error: unknown) {
-      const err = error as { response?: { data?: { message?: string } } };
+      const err = error as { response?: { data?: { message?: string; data?: { requiresVerification?: boolean; email?: string } } } };
+      
+      // Check if user needs to verify their email
+      if (err.response?.data?.data?.requiresVerification) {
+        const email = err.response?.data?.data?.email || formData.email;
+        toast({
+          title: "Email verification required",
+          description: "Please verify your email to continue. A new OTP has been sent.",
+        });
+        router.push(`/verify?email=${encodeURIComponent(email)}`);
+        return;
+      }
+      
       toast({
         title: "Login failed",
         description: err.response?.data?.message || "Invalid credentials",
