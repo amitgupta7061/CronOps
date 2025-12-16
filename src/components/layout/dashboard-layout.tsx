@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/lib/store";
-import { Sidebar } from "./sidebar";
+import { Navbar } from "./navbar";
 import { Toaster } from "@/components/ui/toaster";
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -37,12 +37,12 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <div className="flex">
-        <Sidebar />
-        <main className="flex-1 lg:pl-0 pl-0">
-          <div className="p-4 lg:p-8 pt-20 lg:pt-8">{children}</div>
-        </main>
-      </div>
+      <Navbar />
+      <main className="pt-16">
+        <div className="max-w-400 mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {children}
+        </div>  
+      </main>
       <Toaster />
     </div>
   );
