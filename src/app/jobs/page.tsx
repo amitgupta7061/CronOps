@@ -24,9 +24,6 @@ import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import {
   DropdownMenu,
@@ -87,6 +84,7 @@ export default function JobsPage() {
 
   useEffect(() => {
     fetchJobs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchQuery, statusFilter]);
 
   const handleToggleStatus = async (job: CronJob) => {
@@ -101,7 +99,7 @@ export default function JobsPage() {
         title: job.isActive ? "Job paused" : "Job activated",
         description: `${job.name} has been ${job.isActive ? "paused" : "activated"}.`,
       });
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to update job status",
@@ -117,7 +115,7 @@ export default function JobsPage() {
         title: "Job triggered",
         description: `${job.name} has been queued for immediate execution.`,
       });
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to trigger job",
@@ -137,7 +135,7 @@ export default function JobsPage() {
         title: "Job deleted",
         description: `${jobToDelete.name} has been deleted.`,
       });
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to delete job",
@@ -211,7 +209,7 @@ export default function JobsPage() {
               </div>
               <div className="flex gap-2">
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-[140px]">
+                  <SelectTrigger className="w-35">
                     <Filter className="h-4 w-4 mr-2" />
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
@@ -275,7 +273,7 @@ export default function JobsPage() {
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex items-center gap-4 min-w-0 flex-1">
                         <div
-                          className={`h-3 w-3 rounded-full flex-shrink-0 ${
+                          className={`h-3 w-3 rounded-full shrink-0 ${
                             job.isActive
                               ? "bg-emerald-500 shadow-lg shadow-emerald-500/50"
                               : "bg-gray-400"
@@ -302,7 +300,7 @@ export default function JobsPage() {
                             </span>
                             {job.url && (
                               <span className="flex items-center gap-1 truncate max-w-xs">
-                                <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                                <ExternalLink className="h-3 w-3 shrink-0" />
                                 <span className="truncate">{job.url}</span>
                               </span>
                             )}
@@ -398,7 +396,7 @@ export default function JobsPage() {
           <DialogHeader>
             <DialogTitle>Delete Job</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete "{jobToDelete?.name}"? This action
+              Are you sure you want to delete &ldquo;{jobToDelete?.name}&rdquo;? This action
               cannot be undone and all execution logs will be deleted.
             </DialogDescription>
           </DialogHeader>

@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
-  Search,
   Filter,
   RefreshCw,
   CheckCircle2,
@@ -14,9 +13,8 @@ import {
   Clock,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -79,6 +77,7 @@ export default function LogsPage() {
   useEffect(() => {
     setIsLoading(true);
     fetchLogs();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusFilter, jobFilter, page]);
 
   const getStatusIcon = (status: string) => {
@@ -134,7 +133,7 @@ export default function LogsPage() {
           <CardContent className="py-4">
             <div className="flex flex-col sm:flex-row gap-4">
               <Select value={jobFilter} onValueChange={setJobFilter}>
-                <SelectTrigger className="w-full sm:w-[200px]">
+                <SelectTrigger className="w-full sm:w-50">
                   <Clock className="h-4 w-4 mr-2" />
                   <SelectValue placeholder="All Jobs" />
                 </SelectTrigger>
@@ -149,7 +148,7 @@ export default function LogsPage() {
               </Select>
 
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full sm:w-[160px]">
+                <SelectTrigger className="w-full sm:w-40">
                   <Filter className="h-4 w-4 mr-2" />
                   <SelectValue placeholder="All Status" />
                 </SelectTrigger>
@@ -205,7 +204,7 @@ export default function LogsPage() {
               >
                 <Card className="overflow-hidden">
                   <div className="flex items-center gap-4 p-4">
-                    <div className="flex-shrink-0">{getStatusIcon(log.status)}</div>
+                    <div className="shrink-0">{getStatusIcon(log.status)}</div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <Link

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, Clock, Shield, Zap, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Navbar } from "@/components/layout/navbar";
 import { useAuthStore } from "@/lib/store";
 
 const features = [
@@ -46,30 +47,8 @@ export default function Home() {
   }, [isAuthenticated, router]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-900/80 backdrop-blur-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
-                <Clock className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                CronOps
-              </span>
-            </div>
-            <div className="flex items-center gap-4">
-              <Link href="/login">
-                <Button variant="ghost">Sign in</Button>
-              </Link>
-              <Link href="/signup">
-                <Button>Get Started</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
+    <div className="min-h-screen bg-linear-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+      <Navbar />
 
       {/* Hero */}
       <main className="pt-16">
@@ -82,7 +61,7 @@ export default function Home() {
           >
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
               Schedule Jobs with{" "}
-              <span className="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                 Confidence
               </span>
             </h1>
@@ -119,15 +98,15 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.1 * index }}
                 className="relative group"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-                <div className="relative p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white mb-4">
+                <div className="absolute inset-0 bg-linear-to-r from-indigo-500 to-purple-600 rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+                <div className="relative p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 h-full flex flex-col">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 text-white mb-4 shrink-0">
                     <feature.icon className="h-6 w-6" />
                   </div>
                   <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
                     {feature.title}
                   </h3>
-                  <p className="mt-2 text-gray-600 dark:text-gray-400">
+                  <p className="mt-2 text-gray-600 dark:text-gray-400 grow">
                     {feature.description}
                   </p>
                 </div>
@@ -143,7 +122,7 @@ export default function Home() {
             className="mt-24"
           >
             <div className="relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-2 shadow-2xl">
-              <div className="rounded-xl bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900 p-8">
+              <div className="rounded-xl bg-linear-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900 p-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {[
                     { label: "Total Jobs", value: "24", color: "indigo" },
@@ -174,7 +153,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-purple-600">
                 <Clock className="h-4 w-4 text-white" />
               </div>
               <span className="font-semibold text-gray-900 dark:text-gray-100">

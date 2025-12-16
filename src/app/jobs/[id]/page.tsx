@@ -306,7 +306,7 @@ export default function JobDetailPage({
                               className="font-mono text-sm text-indigo-600 hover:text-indigo-500 truncate flex items-center gap-1"
                             >
                               {job.url}
-                              <ExternalLink className="h-3 w-3 flex-shrink-0" />
+                              <ExternalLink className="h-3 w-3 shrink-0" />
                             </a>
                           </div>
                         </div>

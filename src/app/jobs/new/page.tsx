@@ -390,7 +390,7 @@ export default function NewJobPage() {
                         <Label htmlFor="body">Request Body (JSON)</Label>
                         <textarea
                           id="body"
-                          className="w-full min-h-[120px] px-3 py-2 text-sm border rounded-md font-mono bg-background"
+                          className="w-full min-h-30 px-3 py-2 text-sm border rounded-md font-mono bg-background"
                           placeholder='{"key": "value"}'
                           value={formData.httpBody}
                           onChange={(e) =>
@@ -406,7 +406,7 @@ export default function NewJobPage() {
                       <Label htmlFor="script">Script</Label>
                       <textarea
                         id="script"
-                        className="w-full min-h-[200px] px-3 py-2 text-sm border rounded-md font-mono bg-background"
+                        className="w-full min-h-50 px-3 py-2 text-sm border rounded-md font-mono bg-background"
                         placeholder="#!/bin/bash&#10;echo 'Hello World'"
                         value={formData.script}
                         onChange={(e) =>

@@ -305,7 +305,7 @@ export default function DashboardPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.6 }}
         >
-          <Card className="bg-gradient-to-r from-indigo-500 to-purple-600 border-0">
+          <Card className="bg-linear-to-r from-indigo-500 to-purple-600 border-0">
             <CardContent className="py-6">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="text-white text-center sm:text-left">
