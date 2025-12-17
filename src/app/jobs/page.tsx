@@ -165,8 +165,8 @@ export default function JobsPage() {
       <DashboardLayout>
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="flex flex-col items-center gap-4">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
-            <p className="text-gray-500">Loading jobs...</p>
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            <p className="text-muted-foreground">Loading jobs...</p>
           </div>
         </div>
       </DashboardLayout>
@@ -179,10 +179,10 @@ export default function JobsPage() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            <h1 className="text-3xl font-bold text-foreground">
               Jobs
             </h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-muted-foreground mt-1">
               Manage your scheduled cron jobs
             </p>
           </div>
@@ -199,7 +199,7 @@ export default function JobsPage() {
           <CardContent className="py-4">
             <div className="flex flex-col sm:flex-row gap-4">
               <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   placeholder="Search jobs..."
                   value={searchQuery}
@@ -237,13 +237,13 @@ export default function JobsPage() {
           <Card>
             <CardContent className="py-16">
               <div className="text-center">
-                <Clock className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-700 mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                <Clock className="h-16 w-16 mx-auto text-muted-foreground/50 mb-4" />
+                <h3 className="text-lg font-semibold text-foreground mb-2">
                   {searchQuery || statusFilter !== "all"
                     ? "No jobs found"
                     : "No jobs yet"}
                 </h3>
-                <p className="text-gray-500 mb-6">
+                <p className="text-muted-foreground mb-6">
                   {searchQuery || statusFilter !== "all"
                     ? "Try adjusting your search or filters"
                     : "Create your first cron job to get started"}
@@ -268,7 +268,7 @@ export default function JobsPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2, delay: index * 0.05 }}
               >
-                <Card className="hover:border-indigo-200 dark:hover:border-indigo-800 transition-colors">
+                <Card className="hover:border-primary/50 transition-colors">
                   <CardContent className="py-4">
                     <div className="flex items-center justify-between gap-4">
                       <div className="flex items-center gap-4 min-w-0 flex-1">
@@ -276,14 +276,14 @@ export default function JobsPage() {
                           className={`h-3 w-3 rounded-full shrink-0 ${
                             job.isActive
                               ? "bg-emerald-500 shadow-lg shadow-emerald-500/50"
-                              : "bg-gray-400"
+                              : "bg-muted-foreground"
                           }`}
                         />
                         <div className="min-w-0 flex-1">
                           <div className="flex items-center gap-2">
                             <Link
                               href={`/jobs/${job.id}`}
-                              className="font-semibold text-gray-900 dark:text-gray-100 hover:text-indigo-600 truncate"
+                              className="font-semibold text-foreground hover:text-primary truncate"
                             >
                               {job.name}
                             </Link>
@@ -294,8 +294,8 @@ export default function JobsPage() {
                             </Badge>
                             <Badge variant="outline">{job.type}</Badge>
                           </div>
-                          <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
-                            <span className="font-mono bg-gray-100 dark:bg-gray-800 px-2 py-0.5 rounded">
+                          <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
+                            <span className="font-mono bg-muted px-2 py-0.5 rounded">
                               {job.schedule}
                             </span>
                             {job.url && (
@@ -306,7 +306,7 @@ export default function JobsPage() {
                             )}
                           </div>
                           {job.lastRunAt && (
-                            <p className="text-xs text-gray-400 mt-1">
+                            <p className="text-xs text-muted-foreground mt-1">
                               Last run: {formatDate(job.lastRunAt)}
                               {job.lastRunStatus && (
                                 <span className="ml-2">

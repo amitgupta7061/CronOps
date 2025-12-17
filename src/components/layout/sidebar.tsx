@@ -80,17 +80,17 @@ export function Sidebar() {
         initial={{ x: -280 }}
         animate={{ x: mobileMenuOpen ? 0 : -280 }}
         className={cn(
-          "fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 lg:translate-x-0 transition-transform",
+          "fixed inset-y-0 left-0 z-50 w-64 bg-background border-r border-border lg:translate-x-0 transition-transform",
           "lg:static lg:inset-auto"
         )}
       >
         <div className="flex h-full flex-col">
           {/* Logo */}
-          <div className="flex h-16 items-center gap-2 px-6 border-b border-gray-200 dark:border-gray-800">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-purple-600">
-              <Clock className="h-5 w-5 text-white" />
+          <div className="flex h-16 items-center gap-2 px-6 border-b border-border">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
+              <Clock className="h-5 w-5 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+            <span className="text-xl font-bold bg-linear-to-r from-primary to-chart-3 bg-clip-text text-transparent">
               CronOps
             </span>
           </div>
@@ -107,16 +107,16 @@ export function Sidebar() {
                   className={cn(
                     "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200",
                     isActive
-                      ? "bg-linear-to-r from-indigo-500/10 to-purple-500/10 text-indigo-600 dark:text-indigo-400"
-                      : "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100"
+                      ? "bg-primary/10 text-primary"
+                      : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                   )}
                 >
-                  <item.icon className={cn("h-5 w-5", isActive && "text-indigo-600 dark:text-indigo-400")} />
+                  <item.icon className={cn("h-5 w-5", isActive && "text-primary")} />
                   {item.name}
                   {isActive && (
                     <motion.div
                       layoutId="activeNav"
-                      className="absolute left-0 w-1 h-8 bg-linear-to-b from-indigo-500 to-purple-600 rounded-r-full"
+                      className="absolute left-0 w-1 h-8 bg-primary rounded-r-full"
                     />
                   )}
                 </Link>
@@ -126,7 +126,7 @@ export function Sidebar() {
             <Link
               href="/jobs/new"
               onClick={() => setMobileMenuOpen(false)}
-              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-900/20 transition-all duration-200 mt-4"
+              className="flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-primary hover:bg-primary/10 transition-all duration-200 mt-4"
             >
               <Plus className="h-5 w-5" />
               Create New Job
@@ -134,18 +134,18 @@ export function Sidebar() {
           </nav>
 
           {/* User menu */}
-          <div className="border-t border-gray-200 dark:border-gray-800 p-4">
+          <div className="border-t border-border p-4">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-linear-to-br from-indigo-500 to-purple-600">
-                    <User className="h-4 w-4 text-white" />
+                <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-accent transition-colors">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary">
+                    <User className="h-4 w-4 text-primary-foreground" />
                   </div>
                   <div className="flex-1 text-left">
-                    <p className="font-medium text-gray-900 dark:text-gray-100 truncate">
+                    <p className="font-medium text-foreground truncate">
                       {user?.name || user?.email}
                     </p>
-                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                    <p className="text-xs text-muted-foreground truncate">
                       {user?.email}
                     </p>
                   </div>

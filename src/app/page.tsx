@@ -47,7 +47,7 @@ export default function Home() {
   }, [isAuthenticated, router]);
 
   return (
-    <div className="min-h-screen bg-linear-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+    <div className="min-h-screen bg-background">
       <Navbar />
 
       {/* Hero */}
@@ -59,13 +59,13 @@ export default function Home() {
             transition={{ duration: 0.5 }}
             className="text-center"
           >
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-foreground">
               Schedule Jobs with{" "}
-              <span className="bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-primary to-chart-3 bg-clip-text text-transparent">
                 Confidence
               </span>
             </h1>
-            <p className="mt-6 text-lg sm:text-xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+            <p className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
               A modern, reliable cron job scheduling platform. Create, manage, and
               monitor your scheduled tasks with ease.
             </p>
@@ -98,15 +98,15 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.1 * index }}
                 className="relative group"
               >
-                <div className="absolute inset-0 bg-linear-to-r from-indigo-500 to-purple-600 rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
-                <div className="relative p-6 rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 h-full flex flex-col">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 text-white mb-4 shrink-0">
+                <div className="absolute inset-0 bg-linear-to-r from-primary to-chart-3 rounded-2xl opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+                <div className="relative p-6 rounded-2xl border border-border bg-card h-full flex flex-col">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground mb-4 shrink-0">
                     <feature.icon className="h-6 w-6" />
                   </div>
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+                  <h3 className="text-lg font-semibold text-card-foreground">
                     {feature.title}
                   </h3>
-                  <p className="mt-2 text-gray-600 dark:text-gray-400 grow">
+                  <p className="mt-2 text-muted-foreground grow">
                     {feature.description}
                   </p>
                 </div>
@@ -121,8 +121,8 @@ export default function Home() {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="mt-24"
           >
-            <div className="relative rounded-2xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-2 shadow-2xl">
-              <div className="rounded-xl bg-linear-to-br from-gray-100 to-gray-50 dark:from-gray-800 dark:to-gray-900 p-8">
+            <div className="relative rounded-2xl border border-border bg-card p-2 shadow-2xl">
+              <div className="rounded-xl bg-accent p-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   {[
                     { label: "Total Jobs", value: "24", color: "indigo" },
@@ -131,12 +131,12 @@ export default function Home() {
                   ].map((stat) => (
                     <div
                       key={stat.label}
-                      className="p-4 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800"
+                      className="p-4 rounded-lg bg-card border border-border"
                     >
-                      <p className="text-sm text-gray-500 dark:text-gray-400">
+                      <p className="text-sm text-muted-foreground">
                         {stat.label}
                       </p>
-                      <p className="text-2xl font-bold text-gray-900 dark:text-gray-100 mt-1">
+                      <p className="text-2xl font-bold text-card-foreground mt-1">
                         {stat.value}
                       </p>
                     </div>
@@ -149,18 +149,18 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 dark:border-gray-800 py-12">
+      <footer className="border-t border-border py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-linear-to-br from-indigo-500 to-purple-600">
-                <Clock className="h-4 w-4 text-white" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
+                <Clock className="h-4 w-4 text-primary-foreground" />
               </div>
-              <span className="font-semibold text-gray-900 dark:text-gray-100">
+              <span className="font-semibold text-foreground">
                 CronOps
               </span>
             </div>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
+            <p className="text-sm text-muted-foreground">
               © 2024 CronOps. All rights reserved.
             </p>
           </div>

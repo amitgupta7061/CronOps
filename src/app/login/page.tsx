@@ -67,7 +67,7 @@ export default function LoginPage() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 via-white to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 p-4 pt-20">
+      <div className="min-h-screen flex items-center justify-center bg-background p-4 pt-20">
         <div className="absolute inset-0 bg-grid-gray-900/[0.02] dark:bg-grid-white/[0.02]" />
       
       <motion.div
@@ -78,15 +78,15 @@ export default function LoginPage() {
       >
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-8">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/25">
-            <Clock className="h-5 w-5 text-white" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/25">
+            <Clock className="h-5 w-5 text-primary-foreground" />
           </div>
-          <span className="text-2xl font-bold bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <span className="text-2xl font-bold bg-linear-to-r from-primary to-chart-3 bg-clip-text text-transparent">
             CronOps
           </span>
         </div>
 
-        <Card className="border-gray-200 dark:border-gray-800 shadow-xl">
+        <Card className="border-border shadow-xl">
           <CardHeader className="space-y-1 text-center">
             <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
             <CardDescription>
@@ -98,7 +98,7 @@ export default function LoginPage() {
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="email"
                     type="email"
@@ -118,13 +118,13 @@ export default function LoginPage() {
                   <Label htmlFor="password">Password</Label>
                   <Link
                     href="/forgot-password"
-                    className="text-sm text-indigo-600 hover:text-indigo-500 dark:text-indigo-400"
+                    className="text-sm text-primary hover:text-primary/80"
                   >
                     Forgot password?
                   </Link>
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                  <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="password"
                     type={showPassword ? "text" : "password"}
@@ -139,7 +139,7 @@ export default function LoginPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -170,10 +170,10 @@ export default function LoginPage() {
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200 dark:border-gray-800" />
+                  <div className="w-full border-t border-border" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white dark:bg-gray-900 text-gray-500">
+                  <span className="px-2 bg-card text-muted-foreground">
                     New to CronOps?
                   </span>
                 </div>
@@ -190,13 +190,13 @@ export default function LoginPage() {
           </CardContent>
         </Card>
 
-        <p className="text-center text-sm text-gray-500 mt-6">
+        <p className="text-center text-sm text-muted-foreground mt-6">
           By signing in, you agree to our{" "}
-          <Link href="/terms" className="text-indigo-600 hover:text-indigo-500">
+          <Link href="/terms" className="text-primary hover:text-primary/80">
             Terms of Service
           </Link>{" "}
           and{" "}
-          <Link href="/privacy" className="text-indigo-600 hover:text-indigo-500">
+          <Link href="/privacy" className="text-primary hover:text-primary/80">
             Privacy Policy
           </Link>
         </p>

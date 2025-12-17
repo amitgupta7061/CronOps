@@ -149,7 +149,7 @@ function VerifyOTPContent() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-gray-50 via-white to-gray-100 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 p-4 pt-20">
+      <div className="min-h-screen flex items-center justify-center bg-background p-4 pt-20">
         <div className="absolute inset-0 bg-grid-gray-900/[0.02] dark:bg-grid-white/[0.02]" />
 
       <motion.div
@@ -160,29 +160,29 @@ function VerifyOTPContent() {
       >
         {/* Logo */}
         <div className="flex items-center justify-center gap-2 mb-8">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-indigo-500 to-purple-600 shadow-lg shadow-indigo-500/25">
-            <Clock className="h-5 w-5 text-white" />
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary shadow-lg shadow-primary/25">
+            <Clock className="h-5 w-5 text-primary-foreground" />
           </div>
-          <span className="text-2xl font-bold bg-linear-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          <span className="text-2xl font-bold bg-linear-to-r from-primary to-chart-3 bg-clip-text text-transparent">
             CronOps
           </span>
         </div>
 
-        <Card className="border-gray-200 dark:border-gray-800 shadow-xl">
+        <Card className="border-border shadow-xl">
           <CardHeader className="space-y-1 text-center">
             <motion.div
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-              className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br from-indigo-100 to-purple-100 dark:from-indigo-900/30 dark:to-purple-900/30"
+              className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-accent"
             >
-              <ShieldCheck className="h-8 w-8 text-indigo-600 dark:text-indigo-400" />
+              <ShieldCheck className="h-8 w-8 text-primary" />
             </motion.div>
             <CardTitle className="text-2xl font-bold">Verify your email</CardTitle>
             <CardDescription className="text-base">
               We&apos;ve sent a 6-digit code to
               <br />
-              <span className="font-medium text-gray-900 dark:text-gray-100">
+              <span className="font-medium text-foreground">
                 {email}
               </span>
             </CardDescription>
@@ -205,7 +205,7 @@ function VerifyOTPContent() {
                       value={digit}
                       onChange={(e) => handleOtpChange(index, e.target.value)}
                       onKeyDown={(e) => handleKeyDown(index, e)}
-                      className="w-12 h-14 text-center text-2xl font-bold border-2 focus:border-indigo-500 focus:ring-indigo-500"
+                      className="w-12 h-14 text-center text-2xl font-bold border-2 focus:border-primary focus:ring-primary"
                       disabled={isLoading}
                     />
                   </motion.div>
@@ -233,14 +233,14 @@ function VerifyOTPContent() {
             </form>
 
             <div className="mt-6 text-center">
-              <p className="text-sm text-gray-500 mb-3">
+              <p className="text-sm text-muted-foreground mb-3">
                 Didn&apos;t receive the code?
               </p>
               <Button
                 variant="ghost"
                 onClick={handleResendOTP}
                 disabled={countdown > 0 || isResending}
-                className="text-indigo-600 hover:text-indigo-500"
+                className="text-primary hover:text-primary/80"
               >
                 {isResending ? (
                   <>
@@ -264,10 +264,10 @@ function VerifyOTPContent() {
             <div className="mt-6">
               <div className="relative">
                 <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-gray-200 dark:border-gray-800" />
+                  <div className="w-full border-t border-border" />
                 </div>
                 <div className="relative flex justify-center text-sm">
-                  <span className="px-2 bg-white dark:bg-gray-900 text-gray-500">
+                  <span className="px-2 bg-card text-muted-foreground">
                     Wrong email?
                   </span>
                 </div>
@@ -289,7 +289,7 @@ function VerifyOTPContent() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="text-center text-sm text-gray-500 mt-6"
+          className="text-center text-sm text-muted-foreground mt-6"
         >
           Check your spam folder if you don&apos;t see the email
         </motion.p>
@@ -304,7 +304,7 @@ export default function VerifyOTPPage() {
     <Suspense
       fallback={
         <div className="min-h-screen flex items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
         </div>
       }
     >

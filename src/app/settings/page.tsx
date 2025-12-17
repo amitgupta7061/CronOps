@@ -130,10 +130,10 @@ export default function SettingsPage() {
       <div className="max-w-3xl mx-auto space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+          <h1 className="text-3xl font-bold text-foreground">
             Settings
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-muted-foreground mt-1">
             Manage your account settings and preferences
           </p>
         </div>
@@ -147,7 +147,7 @@ export default function SettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <User className="h-5 w-5 text-indigo-500" />
+                <User className="h-5 w-5 text-primary" />
                 Profile Information
               </CardTitle>
               <CardDescription>
@@ -159,7 +159,7 @@ export default function SettingsPage() {
                 <div className="space-y-2">
                   <Label htmlFor="name">Full Name</Label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="name"
                       placeholder="John Doe"
@@ -176,7 +176,7 @@ export default function SettingsPage() {
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="email"
                       type="email"
@@ -213,7 +213,7 @@ export default function SettingsPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Key className="h-5 w-5 text-indigo-500" />
+                <Key className="h-5 w-5 text-primary" />
                 Change Password
               </CardTitle>
               <CardDescription>
@@ -225,7 +225,7 @@ export default function SettingsPage() {
                 <div className="space-y-2">
                   <Label htmlFor="currentPassword">Current Password</Label>
                   <div className="relative">
-                    <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="currentPassword"
                       type={showPassword ? "text" : "password"}
@@ -243,7 +243,7 @@ export default function SettingsPage() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                     >
                       {showPassword ? (
                         <EyeOff className="h-4 w-4" />
@@ -257,7 +257,7 @@ export default function SettingsPage() {
                 <div className="space-y-2">
                   <Label htmlFor="newPassword">New Password</Label>
                   <div className="relative">
-                    <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="newPassword"
                       type={showPassword ? "text" : "password"}
@@ -273,7 +273,7 @@ export default function SettingsPage() {
                       required
                     />
                   </div>
-                  <p className="text-xs text-gray-500">
+                  <p className="text-xs text-muted-foreground">
                     Must be at least 8 characters
                   </p>
                 </div>
@@ -281,7 +281,7 @@ export default function SettingsPage() {
                 <div className="space-y-2">
                   <Label htmlFor="confirmPassword">Confirm New Password</Label>
                   <div className="relative">
-                    <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="confirmPassword"
                       type={showPassword ? "text" : "password"}
@@ -318,9 +318,9 @@ export default function SettingsPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.2 }}
         >
-          <Card className="border-red-200 dark:border-red-900">
+          <Card className="border-destructive/50">
             <CardHeader>
-              <CardTitle className="text-red-600">Danger Zone</CardTitle>
+              <CardTitle className="text-destructive">Danger Zone</CardTitle>
               <CardDescription>
                 Irreversible and destructive actions
               </CardDescription>
@@ -328,10 +328,10 @@ export default function SettingsPage() {
             <CardContent>
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium text-gray-900 dark:text-gray-100">
+                  <p className="font-medium text-foreground">
                     Delete Account
                   </p>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-muted-foreground">
                     Permanently delete your account and all data
                   </p>
                 </div>

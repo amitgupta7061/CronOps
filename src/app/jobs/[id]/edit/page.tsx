@@ -215,8 +215,8 @@ export default function EditJobPage({
       <DashboardLayout>
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="flex flex-col items-center gap-4">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
-            <p className="text-gray-500">Loading job...</p>
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            <p className="text-muted-foreground">Loading job...</p>
           </div>
         </div>
       </DashboardLayout>
@@ -228,8 +228,8 @@ export default function EditJobPage({
       <DashboardLayout>
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
-            <Clock className="h-16 w-16 mx-auto text-gray-300 mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+            <Clock className="h-16 w-16 mx-auto text-muted-foreground/50 mb-4" />
+            <h2 className="text-xl font-semibold text-foreground mb-2">
               Job not found
             </h2>
             <Link href="/jobs">
@@ -252,10 +252,10 @@ export default function EditJobPage({
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            <h1 className="text-3xl font-bold text-foreground">
               Edit Job
             </h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-muted-foreground mt-1">
               Update job configuration
             </p>
           </div>
@@ -271,7 +271,7 @@ export default function EditJobPage({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Info className="h-5 w-5 text-indigo-500" />
+                  <Info className="h-5 w-5 text-primary" />
                   Basic Information
                 </CardTitle>
                 <CardDescription>
@@ -296,7 +296,7 @@ export default function EditJobPage({
                   <div className="space-y-2">
                     <Label htmlFor="schedule" className="flex items-center gap-2">
                       Cron Schedule
-                      <HelpCircle className="h-4 w-4 text-gray-400" />
+                      <HelpCircle className="h-4 w-4 text-muted-foreground" />
                     </Label>
                     <div className="space-y-2">
                       <Input
@@ -321,7 +321,7 @@ export default function EditJobPage({
                           {CRON_PRESETS.map((preset) => (
                             <SelectItem key={preset.value} value={preset.value}>
                               <span className="flex items-center gap-2">
-                                <span className="font-mono text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                                <span className="font-mono text-xs bg-muted px-1 rounded">
                                   {preset.value}
                                 </span>
                                 {preset.label}
@@ -367,7 +367,7 @@ export default function EditJobPage({
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-indigo-500" />
+                  <Clock className="h-5 w-5 text-primary" />
                   Job Configuration
                 </CardTitle>
                 <CardDescription>
@@ -539,7 +539,7 @@ export default function EditJobPage({
                         })
                       }
                     />
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted-foreground">
                       Number of retry attempts on failure
                     </p>
                   </div>
@@ -557,7 +557,7 @@ export default function EditJobPage({
                         })
                       }
                     />
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted-foreground">
                       Seconds between retries
                     </p>
                   </div>
@@ -575,7 +575,7 @@ export default function EditJobPage({
                         })
                       }
                     />
-                    <p className="text-xs text-gray-500">Max execution time</p>
+                    <p className="text-xs text-muted-foreground">Max execution time</p>
                   </div>
                 </div>
               </CardContent>

@@ -169,8 +169,8 @@ export default function JobDetailPage({
       <DashboardLayout>
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="flex flex-col items-center gap-4">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
-            <p className="text-gray-500">Loading job details...</p>
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            <p className="text-muted-foreground">Loading job details...</p>
           </div>
         </div>
       </DashboardLayout>
@@ -182,11 +182,11 @@ export default function JobDetailPage({
       <DashboardLayout>
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="text-center">
-            <Clock className="h-16 w-16 mx-auto text-gray-300 mb-4" />
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+            <Clock className="h-16 w-16 mx-auto text-muted-foreground/50 mb-4" />
+            <h2 className="text-xl font-semibold text-foreground mb-2">
               Job not found
             </h2>
-            <p className="text-gray-500 mb-4">
+            <p className="text-muted-foreground mb-4">
               The job you're looking for doesn't exist or has been deleted.
             </p>
             <Link href="/jobs">
@@ -211,14 +211,14 @@ export default function JobDetailPage({
             </Link>
             <div>
               <div className="flex items-center gap-3">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                <h1 className="text-3xl font-bold text-foreground">
                   {job.name}
                 </h1>
                 <Badge variant={job.isActive ? "success" : "secondary"}>
                   {job.isActive ? "Active" : "Paused"}
                 </Badge>
               </div>
-              <p className="text-gray-500 font-mono mt-1">{job.schedule}</p>
+              <p className="text-muted-foreground font-mono mt-1">{job.schedule}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -274,9 +274,9 @@ export default function JobDetailPage({
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       {job.type === "http" ? (
-                        <Globe className="h-5 w-5 text-indigo-500" />
+                        <Globe className="h-5 w-5 text-primary" />
                       ) : (
-                        <Terminal className="h-5 w-5 text-indigo-500" />
+                        <Terminal className="h-5 w-5 text-primary" />
                       )}
                       Configuration
                     </CardTitle>
@@ -284,11 +284,11 @@ export default function JobDetailPage({
                   <CardContent className="space-y-4">
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <p className="text-sm text-gray-500">Type</p>
+                        <p className="text-sm text-muted-foreground">Type</p>
                         <p className="font-medium capitalize">{job.type}</p>
                       </div>
                       <div>
-                        <p className="text-sm text-gray-500">Timezone</p>
+                        <p className="text-sm text-muted-foreground">Timezone</p>
                         <p className="font-medium">{job.timezone}</p>
                       </div>
                     </div>
@@ -296,14 +296,14 @@ export default function JobDetailPage({
                     {job.type === "http" && (
                       <>
                         <div>
-                          <p className="text-sm text-gray-500">URL</p>
+                          <p className="text-sm text-muted-foreground">URL</p>
                           <div className="flex items-center gap-2">
                             <Badge variant="outline">{job.httpMethod}</Badge>
                             <a
                               href={job.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="font-mono text-sm text-indigo-600 hover:text-indigo-500 truncate flex items-center gap-1"
+                              className="font-mono text-sm text-primary hover:text-primary/80 truncate flex items-center gap-1"
                             >
                               {job.url}
                               <ExternalLink className="h-3 w-3 shrink-0" />
@@ -313,12 +313,12 @@ export default function JobDetailPage({
 
                         {job.httpHeaders && Object.keys(job.httpHeaders).length > 0 && (
                           <div>
-                            <p className="text-sm text-gray-500 mb-2">Headers</p>
-                            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 font-mono text-sm">
+                            <p className="text-sm text-muted-foreground mb-2">Headers</p>
+                            <div className="bg-muted rounded-lg p-3 font-mono text-sm">
                               {Object.entries(job.httpHeaders).map(([key, value]) => (
                                 <div key={key}>
-                                  <span className="text-indigo-600">{key}</span>:{" "}
-                                  <span className="text-gray-600 dark:text-gray-400">
+                                  <span className="text-primary">{key}</span>:{" "}
+                                  <span className="text-muted-foreground">
                                     {value as string}
                                   </span>
                                 </div>
@@ -329,8 +329,8 @@ export default function JobDetailPage({
 
                         {job.httpBody && (
                           <div>
-                            <p className="text-sm text-gray-500 mb-2">Body</p>
-                            <pre className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 font-mono text-sm overflow-auto max-h-48">
+                            <p className="text-sm text-muted-foreground mb-2">Body</p>
+                            <pre className="bg-muted rounded-lg p-3 font-mono text-sm overflow-auto max-h-48">
                               {job.httpBody}
                             </pre>
                           </div>
@@ -340,8 +340,8 @@ export default function JobDetailPage({
 
                     {job.type === "script" && job.script && (
                       <div>
-                        <p className="text-sm text-gray-500 mb-2">Script</p>
-                        <pre className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3 font-mono text-sm overflow-auto max-h-48">
+                        <p className="text-sm text-muted-foreground mb-2">Script</p>
+                        <pre className="bg-muted rounded-lg p-3 font-mono text-sm overflow-auto max-h-48">
                           {job.script}
                         </pre>
                       </div>
@@ -359,42 +359,42 @@ export default function JobDetailPage({
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      <Activity className="h-5 w-5 text-indigo-500" />
+                      <Activity className="h-5 w-5 text-primary" />
                       Execution Settings
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="grid grid-cols-3 gap-4">
-                      <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                      <div className="text-center p-4 bg-muted rounded-lg">
+                        <p className="text-2xl font-bold text-foreground">
                           {job.retryCount}
                         </p>
-                        <p className="text-sm text-gray-500">Retry Count</p>
+                        <p className="text-sm text-muted-foreground">Retry Count</p>
                       </div>
-                      <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                      <div className="text-center p-4 bg-muted rounded-lg">
+                        <p className="text-2xl font-bold text-foreground">
                           {job.retryDelay}s
                         </p>
-                        <p className="text-sm text-gray-500">Retry Delay</p>
+                        <p className="text-sm text-muted-foreground">Retry Delay</p>
                       </div>
-                      <div className="text-center p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                        <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+                      <div className="text-center p-4 bg-muted rounded-lg">
+                        <p className="text-2xl font-bold text-foreground">
                           {job.timeout}s
                         </p>
-                        <p className="text-sm text-gray-500">Timeout</p>
+                        <p className="text-sm text-muted-foreground">Timeout</p>
                       </div>
                     </div>
 
-                    <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-800">
+                    <div className="mt-6 pt-6 border-t border-border">
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
-                          <p className="text-gray-500">Created</p>
+                          <p className="text-muted-foreground">Created</p>
                           <p className="font-medium">
                             {formatDate(job.createdAt)}
                           </p>
                         </div>
                         <div>
-                          <p className="text-gray-500">Last Updated</p>
+                          <p className="text-muted-foreground">Last Updated</p>
                           <p className="font-medium">
                             {formatDate(job.updatedAt)}
                           </p>
@@ -402,13 +402,13 @@ export default function JobDetailPage({
                         {job.lastRunAt && (
                           <>
                             <div>
-                              <p className="text-gray-500">Last Run</p>
+                              <p className="text-muted-foreground">Last Run</p>
                               <p className="font-medium">
                                 {formatDate(job.lastRunAt)}
                               </p>
                             </div>
                             <div>
-                              <p className="text-gray-500">Last Status</p>
+                              <p className="text-muted-foreground">Last Status</p>
                               <div className="flex items-center gap-2">
                                 {getStatusIcon(job.lastRunStatus || "unknown")}
                                 <span className="font-medium capitalize">
@@ -432,7 +432,7 @@ export default function JobDetailPage({
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="flex items-center gap-2">
-                      <Calendar className="h-5 w-5 text-indigo-500" />
+                      <Calendar className="h-5 w-5 text-primary" />
                       Execution History
                     </CardTitle>
                     <CardDescription>
@@ -447,7 +447,7 @@ export default function JobDetailPage({
               </CardHeader>
               <CardContent>
                 {logs.length === 0 ? (
-                  <div className="text-center py-12 text-gray-500">
+                  <div className="text-center py-12 text-muted-foreground">
                     <Activity className="h-12 w-12 mx-auto mb-4 opacity-50" />
                     <p>No executions yet</p>
                     <p className="text-sm mt-1">
@@ -461,16 +461,16 @@ export default function JobDetailPage({
                         key={log.id}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden"
+                        className="border border-border rounded-lg overflow-hidden"
                       >
-                        <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-800/50">
+                        <div className="flex items-center justify-between p-4 bg-accent">
                           <div className="flex items-center gap-3">
                             {getStatusIcon(log.status)}
                             <div>
-                              <p className="font-medium text-gray-900 dark:text-gray-100">
+                              <p className="font-medium text-foreground">
                                 {formatDate(log.startedAt)}
                               </p>
-                              <div className="flex items-center gap-2 text-sm text-gray-500">
+                              <div className="flex items-center gap-2 text-sm text-muted-foreground">
                                 {log.duration && (
                                   <span>Duration: {formatDuration(log.duration)}</span>
                                 )}
@@ -483,7 +483,7 @@ export default function JobDetailPage({
                           {getStatusBadge(log.status)}
                         </div>
                         {(log.response || log.error) && (
-                          <div className="p-4 border-t border-gray-200 dark:border-gray-800">
+                          <div className="p-4 border-t border-border">
                             {log.error && (
                               <div className="mb-2">
                                 <p className="text-sm text-red-600 font-medium mb-1">
@@ -496,10 +496,10 @@ export default function JobDetailPage({
                             )}
                             {log.response && (
                               <div>
-                                <p className="text-sm text-gray-500 font-medium mb-1">
+                                <p className="text-sm text-muted-foreground font-medium mb-1">
                                   Response:
                                 </p>
-                                <pre className="text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-800 p-2 rounded overflow-auto max-h-24">
+                                <pre className="text-sm text-foreground bg-muted p-2 rounded overflow-auto max-h-24">
                                   {typeof log.response === "string"
                                     ? log.response
                                     : JSON.stringify(log.response, null, 2)}

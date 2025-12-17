@@ -107,8 +107,8 @@ export default function LogsPage() {
       <DashboardLayout>
         <div className="flex items-center justify-center min-h-[60vh]">
           <div className="flex flex-col items-center gap-4">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-indigo-500 border-t-transparent" />
-            <p className="text-gray-500">Loading logs...</p>
+            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            <p className="text-muted-foreground">Loading logs...</p>
           </div>
         </div>
       </DashboardLayout>
@@ -120,10 +120,10 @@ export default function LogsPage() {
       <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+          <h1 className="text-3xl font-bold text-foreground">
             Execution Logs
           </h1>
-          <p className="text-gray-500 dark:text-gray-400 mt-1">
+          <p className="text-muted-foreground mt-1">
             View the execution history of all your cron jobs
           </p>
         </div>
@@ -181,11 +181,11 @@ export default function LogsPage() {
           <Card>
             <CardContent className="py-16">
               <div className="text-center">
-                <Activity className="h-16 w-16 mx-auto text-gray-300 dark:text-gray-700 mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+                <Activity className="h-16 w-16 mx-auto text-muted-foreground/50 mb-4" />
+                <h3 className="text-lg font-semibold text-foreground mb-2">
                   No execution logs found
                 </h3>
-                <p className="text-gray-500">
+                <p className="text-muted-foreground">
                   {jobFilter !== "all" || statusFilter !== "all"
                     ? "Try adjusting your filters"
                     : "Logs will appear here once jobs are executed"}
@@ -209,13 +209,13 @@ export default function LogsPage() {
                       <div className="flex items-center gap-2 mb-1">
                         <Link
                           href={`/jobs/${log.cronJobId}`}
-                          className="font-semibold text-gray-900 dark:text-gray-100 hover:text-indigo-600 truncate"
+                          className="font-semibold text-foreground hover:text-primary truncate"
                         >
                           {log.cronJob?.name || "Unknown Job"}
                         </Link>
                         {getStatusBadge(log.status)}
                       </div>
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
                           {formatDate(log.startedAt)}
@@ -234,7 +234,7 @@ export default function LogsPage() {
                   </div>
 
                   {(log.error || log.response) && (
-                    <div className="border-t border-gray-200 dark:border-gray-800 p-4 bg-gray-50 dark:bg-gray-800/50">
+                    <div className="border-t border-border p-4 bg-accent">
                       {log.error && (
                         <div className="mb-3">
                           <p className="text-sm font-medium text-red-600 mb-1">Error:</p>
@@ -245,8 +245,8 @@ export default function LogsPage() {
                       )}
                       {log.response && (
                         <div>
-                          <p className="text-sm font-medium text-gray-500 mb-1">Response:</p>
-                          <pre className="text-sm text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-900 p-2 rounded overflow-auto max-h-24 border border-gray-200 dark:border-gray-700">
+                          <p className="text-sm font-medium text-muted-foreground mb-1">Response:</p>
+                          <pre className="text-sm text-foreground bg-card p-2 rounded overflow-auto max-h-24 border border-border">
                             {typeof log.response === "string"
                               ? log.response.slice(0, 500)
                               : JSON.stringify(log.response, null, 2).slice(0, 500)}
@@ -271,7 +271,7 @@ export default function LogsPage() {
                 >
                   Previous
                 </Button>
-                <span className="text-sm text-gray-500">
+                <span className="text-sm text-muted-foreground">
                   Page {page} of {totalPages}
                 </span>
                 <Button

@@ -164,10 +164,10 @@ export default function NewJobPage() {
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            <h1 className="text-3xl font-bold text-foreground">
               Create New Job
             </h1>
-            <p className="text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-muted-foreground mt-1">
               Configure a new scheduled cron job
             </p>
           </div>
@@ -183,7 +183,7 @@ export default function NewJobPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Info className="h-5 w-5 text-indigo-500" />
+                  <Info className="h-5 w-5 text-primary" />
                   Basic Information
                 </CardTitle>
                 <CardDescription>
@@ -208,7 +208,7 @@ export default function NewJobPage() {
                   <div className="space-y-2">
                     <Label htmlFor="schedule" className="flex items-center gap-2">
                       Cron Schedule
-                      <HelpCircle className="h-4 w-4 text-gray-400" />
+                      <HelpCircle className="h-4 w-4 text-muted-foreground" />
                     </Label>
                     <div className="space-y-2">
                       <Input
@@ -233,7 +233,7 @@ export default function NewJobPage() {
                           {CRON_PRESETS.map((preset) => (
                             <SelectItem key={preset.value} value={preset.value}>
                               <span className="flex items-center gap-2">
-                                <span className="font-mono text-xs bg-gray-100 dark:bg-gray-800 px-1 rounded">
+                                <span className="font-mono text-xs bg-muted px-1 rounded">
                                   {preset.value}
                                 </span>
                                 {preset.label}
@@ -279,7 +279,7 @@ export default function NewJobPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Clock className="h-5 w-5 text-indigo-500" />
+                  <Clock className="h-5 w-5 text-primary" />
                   Job Configuration
                 </CardTitle>
                 <CardDescription>
@@ -451,7 +451,7 @@ export default function NewJobPage() {
                         })
                       }
                     />
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted-foreground">
                       Number of retry attempts on failure
                     </p>
                   </div>
@@ -469,7 +469,7 @@ export default function NewJobPage() {
                         })
                       }
                     />
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted-foreground">
                       Seconds between retries
                     </p>
                   </div>
@@ -487,7 +487,7 @@ export default function NewJobPage() {
                         })
                       }
                     />
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted-foreground">
                       Max execution time
                     </p>
                   </div>
