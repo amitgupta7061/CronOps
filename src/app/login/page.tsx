@@ -17,7 +17,7 @@ import { authApi } from "@/lib/api";
 export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
-  const { setAuth, isAuthenticated, isLoading: authLoading } = useAuthStore();
+  const { setAuth, isAuthenticated, isLoading: authLoading, user, checkAuth } = useAuthStore();
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -25,12 +25,16 @@ export default function LoginPage() {
     password: "",
   });
 
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
   // Redirect if already logged in
   useEffect(() => {
-    if (!authLoading && isAuthenticated) {
-      router.replace("/dashboard");
+    if (!authLoading && isAuthenticated && user) {
+      router.replace(user.role === "ADMIN" ? "/admin" : "/dashboard");
     }
-  }, [isAuthenticated, authLoading, router]);
+  }, [isAuthenticated, authLoading, router, user]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +50,7 @@ export default function LoginPage() {
         title: "Welcome back!",
         description: "You have been logged in successfully.",
       });
-      router.push("/dashboard");
+      router.push(user.role === "ADMIN" ? "/admin" : "/dashboard");
     } catch (error: unknown) {
       const err = error as { response?: { data?: { message?: string; data?: { requiresVerification?: boolean; email?: string } } } };
       

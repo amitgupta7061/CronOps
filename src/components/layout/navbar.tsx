@@ -29,9 +29,9 @@ import { cn } from "@/lib/utils";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Jobs", href: "/jobs", icon: Calendar },
-  { name: "Logs", href: "/logs", icon: Clock },
+  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, roles: ["USER"] },
+  { name: "Jobs", href: "/jobs", icon: Calendar, roles: ["USER"] },
+  { name: "Logs", href: "/logs", icon: Clock, roles: ["USER"] },
 ];
 
 export function Navbar() {
@@ -66,7 +66,9 @@ export function Navbar() {
           {/* Desktop Navigation - Only show when authenticated */}
           {isAuthenticated && (
             <nav className="hidden md:flex items-center gap-1">
-              {navigation.map((item) => {
+              {navigation
+                .filter((item) => !item.roles || item.roles.includes(user?.role || "USER"))
+                .map((item) => {
                 const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
                 return (
                   <Link
@@ -154,7 +156,9 @@ export function Navbar() {
         {isAuthenticated && mobileMenuOpen && (
           <div className="md:hidden py-4 border-t border-border">
             <nav className="flex flex-col gap-1">
-              {navigation.map((item) => {
+              {navigation
+                .filter((item) => !item.roles || item.roles.includes(user?.role || "USER"))
+                .map((item) => {
                 const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
                 return (
                   <Link

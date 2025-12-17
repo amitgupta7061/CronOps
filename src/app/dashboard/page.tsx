@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   BarChart3,
@@ -26,6 +27,7 @@ import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { statsApi, jobsApi, logsApi } from "@/lib/api";
 import type { CronJob, ExecutionLog } from "@/lib/api";
 import { formatDate, formatDuration } from "@/lib/utils";
+import { useAuthStore } from "@/lib/store";
 import Link from "next/link";
 
 interface DashboardStats {
@@ -39,10 +41,18 @@ interface DashboardStats {
 }
 
 export default function DashboardPage() {
+  const router = useRouter();
+  const { user } = useAuthStore();
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [recentJobs, setRecentJobs] = useState<CronJob[]>([]);
   const [recentLogs, setRecentLogs] = useState<ExecutionLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (user?.role === "ADMIN") {
+      router.replace("/admin");
+    }
+  }, [user, router]);
 
   useEffect(() => {
     const fetchData = async () => {
