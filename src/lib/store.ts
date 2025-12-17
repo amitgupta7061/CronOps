@@ -9,13 +9,13 @@ interface AuthState {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, name?: string) => Promise<void>;
   logout: () => Promise<void>;
-  checkAuth: () => Promise<void>;
+  checkAuth: (force?: boolean) => Promise<void>;
   setAuth: (user: User, token: string) => void;
 }
 
 export const useAuthStore = create<AuthState>()(
   persist(
-    (set) => ({
+    (set, get) => ({
       user: null,
       isAuthenticated: false,
       isLoading: true,
@@ -56,8 +56,15 @@ export const useAuthStore = create<AuthState>()(
         set({ user: null, isAuthenticated: false });
       },
 
-      checkAuth: async () => {
+      checkAuth: async (force = false) => {
         try {
+          const state = get();
+          // If already authenticated and not forced, skip refetch
+          if (!force && state.isAuthenticated && state.user) {
+            set({ isLoading: false });
+            return;
+          }
+
           const token = localStorage.getItem("accessToken");
           if (!token) {
             set({ isLoading: false });
