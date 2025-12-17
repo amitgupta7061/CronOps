@@ -162,6 +162,71 @@ export default function PricingPage() {
             );
           })}
         </div>
+
+        {/* FAQ Section */}
+        <div className="max-w-4xl mx-auto px-4 py-16">
+          <h2 className="text-3xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="space-y-2"
+            >
+              <h3 className="text-xl font-semibold">Can I cancel anytime?</h3>
+              <p className="text-muted-foreground">Yes, you can downgrade to the Free plan at any time. Your premium features will remain active until the end of your billing cycle.</p>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="space-y-2"
+            >
+              <h3 className="text-xl font-semibold">What happens if I reach my job limit?</h3>
+              <p className="text-muted-foreground">We'll notify you when you're close to your limit. You won't be able to create new active jobs until you upgrade or free up space.</p>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              className="space-y-2"
+            >
+              <h3 className="text-xl font-semibold">Do you offer refunds?</h3>
+              <p className="text-muted-foreground">We offer a 14-day money-back guarantee if you're not satisfied with our service. Contact support for assistance.</p>
+            </motion.div>
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.3 }}
+              className="space-y-2"
+            >
+              <h3 className="text-xl font-semibold">Can I change plans later?</h3>
+              <p className="text-muted-foreground">Absolutely. You can upgrade or downgrade your plan at any time directly from this dashboard.</p>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Enterprise Section */}
+        <div className="max-w-5xl mx-auto px-4 pb-16">
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="bg-primary/5 rounded-2xl p-8 md:p-12 text-center"
+          >
+            <h2 className="text-3xl font-bold mb-4">Need a custom solution?</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto mb-8">
+              For high-volume needs, custom integrations, dedicated support, or on-premise deployment, our enterprise team is here to help.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" variant="default">Contact Sales</Button>
+              <Button size="lg" variant="outline">View API Documentation</Button>
+            </div>
+          </motion.div>
+        </div>
       </div>
     </DashboardLayout>
   );

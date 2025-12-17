@@ -29,56 +29,42 @@ import type { ExecutionLog, CronJob } from "@/lib/api";
 import { formatDate, formatDuration } from "@/lib/utils";
 import Link from "next/link";
 
+import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData } from "@tanstack/react-query";
+
 export default function LogsPage() {
   const { toast } = useToast();
-  const [logs, setLogs] = useState<ExecutionLog[]>([]);
-  const [jobs, setJobs] = useState<CronJob[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [jobFilter, setJobFilter] = useState<string>("all");
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
 
-  const fetchLogs = async () => {
-    try {
+  // Fetch jobs for the filter dropdown - cache for longer
+  const { data: jobs = [] } = useQuery({
+    queryKey: ["jobs-list-short"],
+    queryFn: async () => {
+      const response = await jobsApi.getAll({ limit: 100 });
+      return response.data.data?.jobs || [];
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+
+  // Fetch logs with pagination and filters
+  const { data: logsData, isLoading, refetch } = useQuery({
+    queryKey: ["logs", statusFilter, jobFilter, page],
+    queryFn: async () => {
       const response = await logsApi.getAll({
         status: statusFilter === "all" ? undefined : statusFilter,
         jobId: jobFilter === "all" ? undefined : jobFilter,
         page,
         limit: 20,
       });
-      setLogs(response.data.data?.logs || []);
-      setTotalPages(response.data.data?.pagination?.totalPages || 1);
-    } catch (error) {
-      console.error("Failed to fetch logs:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load execution logs",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      return response.data.data;
+    },
+    placeholderData: keepPreviousData,
+  });
 
-  const fetchJobs = async () => {
-    try {
-      const response = await jobsApi.getAll({ limit: 100 });
-      setJobs(response.data.data?.jobs || []);
-    } catch (error) {
-      console.error("Failed to fetch jobs:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchJobs();
-  }, []);
-
-  useEffect(() => {
-    setIsLoading(true);
-    fetchLogs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [statusFilter, jobFilter, page]);
+  const logs = logsData?.logs || [];
+  const totalPages = logsData?.pagination?.totalPages || 1;
 
   const getStatusIcon = (status: string) => {
     switch (status.toLowerCase()) {
@@ -139,7 +125,7 @@ export default function LogsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Jobs</SelectItem>
-                  {jobs.map((job) => (
+                  {jobs.map((job: CronJob) => (
                     <SelectItem key={job.id} value={job.id}>
                       {job.name}
                     </SelectItem>
@@ -164,10 +150,7 @@ export default function LogsPage() {
 
               <Button
                 variant="outline"
-                onClick={() => {
-                  setIsLoading(true);
-                  fetchLogs();
-                }}
+                onClick={() => refetch()}
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? "animate-spin" : ""}`} />
                 Refresh

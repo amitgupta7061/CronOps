@@ -1,8 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 import {
   Clock,
   CheckCircle2,
@@ -33,10 +34,6 @@ import Link from "next/link";
 export default function DashboardPage() {
   const router = useRouter();
   const { user } = useAuthStore();
-  const [stats, setStats] = useState<Stats | null>(null);
-  const [recentJobs, setRecentJobs] = useState<CronJob[]>([]);
-  const [recentLogs, setRecentLogs] = useState<ExecutionLog[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (user?.role === "ADMIN") {
@@ -44,26 +41,34 @@ export default function DashboardPage() {
     }
   }, [user, router]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [statsRes, jobsRes, logsRes] = await Promise.all([
-          statsApi.getStats(),
-          jobsApi.getAll({ limit: 5 }),
-          logsApi.getAll({ limit: 8 }),
-        ]);
-        setStats(statsRes.data.data);
-        setRecentJobs(jobsRes.data.data?.jobs || []);
-        setRecentLogs(logsRes.data.data?.logs || []);
-      } catch (error) {
-        console.error("Failed to fetch dashboard data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const { data: statsData, isLoading: isStatsLoading } = useQuery({
+    queryKey: ["dashboard-stats"],
+    queryFn: async () => {
+      const response = await statsApi.getStats();
+      return response.data.data;
+    },
+  });
 
-    fetchData();
-  }, []);
+  const { data: jobsData, isLoading: isJobsLoading } = useQuery({
+    queryKey: ["dashboard-jobs"],
+    queryFn: async () => {
+      const response = await jobsApi.getAll({ limit: 5 });
+      return response.data.data?.jobs || [];
+    },
+  });
+
+  const { data: logsData, isLoading: isLogsLoading } = useQuery({
+    queryKey: ["dashboard-logs"],
+    queryFn: async () => {
+      const response = await logsApi.getAll({ limit: 8 });
+      return response.data.data?.logs || [];
+    },
+  });
+
+  const isLoading = isStatsLoading || isJobsLoading || isLogsLoading;
+  const stats = statsData;
+  const recentJobs = jobsData || [];
+  const recentLogs = logsData || [];
 
   const getStatusIcon = (status: string) => {
     switch (status.toLowerCase()) {
@@ -454,7 +459,7 @@ export default function DashboardPage() {
                   </div>
                 ) : (
                   <div className="divide-y divide-border">
-                    {recentJobs.map((job) => (
+                    {recentJobs.map((job: CronJob) => (
                       <Link
                         key={job.id}
                         href={`/jobs/${job.id}`}
@@ -538,7 +543,7 @@ export default function DashboardPage() {
                   </div>
                 ) : (
                   <div className="divide-y divide-border">
-                    {recentLogs.map((log) => (
+                    {recentLogs.map((log: ExecutionLog) => (
                       <div
                         key={log.id}
                         className="flex items-center justify-between p-4 hover:bg-accent transition-colors"

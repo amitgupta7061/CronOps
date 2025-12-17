@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";
 import {
   Plus,
@@ -57,37 +58,25 @@ import { formatDate } from "@/lib/utils";
 export default function JobsPage() {
   const { toast } = useToast();
   const { user } = useAuthStore();
-  const [jobs, setJobs] = useState<CronJob[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [jobToDelete, setJobToDelete] = useState<CronJob | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const queryClient = useQueryClient();
 
-  const fetchJobs = async () => {
-    try {
+  const { data: jobs = [], isLoading, refetch } = useQuery({
+    queryKey: ["jobs", searchQuery, statusFilter],
+    queryFn: async () => {
       const response = await jobsApi.getAll({
         search: searchQuery || undefined,
         status: statusFilter === "all" ? undefined : statusFilter === "active" ? "ACTIVE" : "PAUSED",
       });
-      setJobs(response.data.data?.jobs || []);
-    } catch (error) {
-      console.error("Failed to fetch jobs:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load jobs",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+      return response.data.data?.jobs || [];
+    },
+  });
 
-  useEffect(() => {
-    fetchJobs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchQuery, statusFilter]);
+  const fetchJobs = () => refetch();
 
   const handleToggleStatus = async (job: CronJob) => {
     try {
@@ -96,11 +85,11 @@ export default function JobsPage() {
       } else {
         await jobsApi.resume(job.id);
       }
-      setJobs(
-        jobs.map((j) =>
-          j.id === job.id ? { ...j, status: job.status === 'ACTIVE' ? 'PAUSED' : 'ACTIVE' } : j
-        )
-      );
+      await queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      // Also invalidate dashboard queries as they depend on job status
+      await queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      await queryClient.invalidateQueries({ queryKey: ["dashboard-jobs"] });
+      
       toast({
         title: job.status === 'ACTIVE' ? "Job paused" : "Job activated",
         description: `${job.name} has been ${job.status === 'ACTIVE' ? "paused" : "activated"}.`,
@@ -136,7 +125,10 @@ export default function JobsPage() {
     setIsDeleting(true);
     try {
       await jobsApi.delete(jobToDelete.id);
-      setJobs(jobs.filter((j) => j.id !== jobToDelete.id));
+      await queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      // Invalidate dashboard stats
+      await queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      
       toast({
         title: "Job deleted",
         description: `${jobToDelete.name} has been deleted.`,
@@ -154,7 +146,7 @@ export default function JobsPage() {
     }
   };
 
-  const filteredJobs = jobs.filter((job) => {
+  const filteredJobs = jobs.filter((job : CronJob) => {
     if (searchQuery) {
       const query = searchQuery.toLowerCase();
       return (
@@ -274,7 +266,7 @@ export default function JobsPage() {
           </Card>
         ) : (
           <div className="grid gap-4">
-            {filteredJobs.map((job, index) => (
+            {filteredJobs.map((job: CronJob, index: number) => (
               <motion.div
                 key={job.id}
                 initial={{ opacity: 0, y: 10 }}

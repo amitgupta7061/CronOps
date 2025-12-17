@@ -4,6 +4,8 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/theme-provider";
 
+import Providers from "./providers";
+
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -42,10 +44,12 @@ export default function RootLayout({
         />
       </head>
       <body className={`${inter.variable} antialiased`}>
-        <ThemeProvider defaultTheme="system" storageKey="cronops-theme">
-          {children}
-          <Toaster />
-        </ThemeProvider>
+        <Providers>
+          <ThemeProvider defaultTheme="system" storageKey="cronops-theme">
+            {children}
+            <Toaster />
+          </ThemeProvider>
+        </Providers>
       </body>
     </html>
   );
