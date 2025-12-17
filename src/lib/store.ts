@@ -64,6 +64,7 @@ export const useAuthStore = create<AuthState>()(
             return;
           }
 
+          // Always fetch fresh user data from server to get latest role
           const response = await authApi.getProfile();
           set({ user: response.data.data, isAuthenticated: true, isLoading: false });
         } catch (error) {
@@ -81,7 +82,7 @@ export const useAuthStore = create<AuthState>()(
       },
     }),
     {
-      name: "auth-storage",
+      name: "cronops-auth-v2",
       partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
     }
   )

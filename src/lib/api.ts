@@ -104,12 +104,31 @@ export const statsApi = {
   getStats: () => api.get("/stats"),
 };
 
+// Admin API
+export const adminApi = {
+  getStats: () => api.get("/admin/stats"),
+  getUsers: (params?: { page?: number; limit?: number }) =>
+    api.get("/admin/users", { params }),
+  getUserById: (id: string) => api.get(`/admin/users/${id}`),
+  updateUserRole: (id: string, role: "USER" | "ADMIN") =>
+    api.put(`/admin/users/${id}/role`, { role }),
+  deleteUser: (id: string) => api.delete(`/admin/users/${id}`),
+  getAllJobs: (params?: { page?: number; limit?: number; status?: string }) =>
+    api.get("/admin/jobs", { params }),
+  getAllLogs: (params?: { page?: number; limit?: number; status?: string }) =>
+    api.get("/admin/logs", { params }),
+};
+
 // Types
 export interface User {
   id: string;
   email: string;
   name: string;
+  role?: "USER" | "ADMIN";
+  isVerified?: boolean;
+  jobCount?: number;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface CronJob {

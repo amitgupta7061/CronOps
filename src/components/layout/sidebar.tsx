@@ -13,6 +13,7 @@ import {
   User,
   Menu,
   X,
+  Shield,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuthStore } from "@/lib/store";
@@ -27,9 +28,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
 
-const navigation = [
+const navigation: { name: string; href: string; icon: React.ComponentType<{ className?: string }>; adminOnly?: boolean }[] = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Jobs", href: "/jobs", icon: Clock },
+  { name: "Admin", href: "/admin", icon: Shield, adminOnly: true },
 ];
 
 export function Sidebar() {
@@ -97,7 +99,9 @@ export function Sidebar() {
 
           {/* Navigation */}
           <nav className="flex-1 space-y-1 px-3 py-4">
-            {navigation.map((item) => {
+            {navigation
+              .filter((item) => !item.adminOnly || user?.role === "ADMIN")
+              .map((item) => {
               const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
               return (
                 <Link
