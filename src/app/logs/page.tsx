@@ -47,8 +47,8 @@ export default function LogsPage() {
         page,
         limit: 20,
       });
-      setLogs(response.data.logs);
-      setTotalPages(response.data.pagination.pages);
+      setLogs(response.data.data?.logs || []);
+      setTotalPages(response.data.data?.pagination?.totalPages || 1);
     } catch (error) {
       console.error("Failed to fetch logs:", error);
       toast({
@@ -64,7 +64,7 @@ export default function LogsPage() {
   const fetchJobs = async () => {
     try {
       const response = await jobsApi.getAll({ limit: 100 });
-      setJobs(response.data.jobs);
+      setJobs(response.data.data?.jobs || []);
     } catch (error) {
       console.error("Failed to fetch jobs:", error);
     }

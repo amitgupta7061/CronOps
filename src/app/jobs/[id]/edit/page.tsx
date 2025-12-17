@@ -93,33 +93,31 @@ export default function EditJobPage({
     retryCount: 3,
     retryDelay: 60,
     timeout: 30,
-    isActive: true,
   });
 
   useEffect(() => {
     const fetchJob = async () => {
       try {
         const response = await jobsApi.getById(id);
-        const jobData = response.data;
+        const jobData = response.data.data;
         setJob(jobData);
-        setJobType(jobData.type as "http" | "script");
+        setJobType(jobData.targetType === "HTTP" ? "http" : "script");
         setFormData({
           name: jobData.name,
-          schedule: jobData.schedule,
+          schedule: jobData.cronExpression,
           timezone: jobData.timezone,
-          url: jobData.url || "",
+          url: jobData.targetUrl || "",
           httpMethod: jobData.httpMethod || "GET",
-          httpBody: jobData.httpBody || "",
-          script: jobData.script || "",
-          retryCount: jobData.retryCount,
-          retryDelay: jobData.retryDelay,
-          timeout: jobData.timeout,
-          isActive: jobData.isActive,
+          httpBody: jobData.payload || "",
+          script: jobData.command || "",
+          retryCount: jobData.maxRetries || 3,
+          retryDelay: 60,
+          timeout: Math.floor(jobData.timeout / 1000), // Convert ms to seconds
         });
 
         // Parse headers
-        if (jobData.httpHeaders && typeof jobData.httpHeaders === "object") {
-          const headerEntries = Object.entries(jobData.httpHeaders).map(
+        if (jobData.headers && typeof jobData.headers === "object") {
+          const headerEntries = Object.entries(jobData.headers).map(
             ([key, value]) => ({ key, value: value as string })
           );
           setHeaders(
@@ -174,23 +172,21 @@ export default function EditJobPage({
 
       await jobsApi.update(id, {
         name: formData.name,
-        schedule: formData.schedule,
+        cronExpression: formData.schedule,
         timezone: formData.timezone,
-        type: jobType,
-        url: jobType === "http" ? formData.url : undefined,
+        targetType: jobType === "http" ? "HTTP" : "SCRIPT",
+        targetUrl: jobType === "http" ? formData.url : undefined,
         httpMethod: jobType === "http" ? formData.httpMethod : undefined,
-        httpHeaders:
+        headers:
           jobType === "http" && Object.keys(httpHeaders).length > 0
             ? httpHeaders
             : undefined,
-        httpBody:
+        payload:
           jobType === "http" && formData.httpBody ? formData.httpBody : undefined,
-        script: jobType === "script" ? formData.script : undefined,
-        retryCount: formData.retryCount,
-        retryDelay: formData.retryDelay,
-        timeout: formData.timeout,
-        isActive: formData.isActive,
-      });
+        command: jobType === "script" ? formData.script : undefined,
+        maxRetries: formData.retryCount,
+        timeout: formData.timeout * 1000, // Convert seconds to milliseconds
+      } as Partial<CronJob>);
 
       toast({
         title: "Job updated",

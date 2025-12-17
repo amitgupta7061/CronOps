@@ -74,7 +74,7 @@ export const authApi = {
 
 // Jobs API
 export const jobsApi = {
-  getAll: (params?: { page?: number; limit?: number; status?: string; isActive?: boolean; search?: string }) =>
+  getAll: (params?: { page?: number; limit?: number; status?: string; search?: string }) =>
     api.get("/jobs", { params }),
   getById: (id: string) => api.get(`/jobs/${id}`),
   create: (data: CreateJobData) => api.post("/jobs", data),
@@ -116,20 +116,20 @@ export interface CronJob {
   id: string;
   userId: string;
   name: string;
-  schedule: string;
+  cronExpression: string;
   timezone: string;
-  type: "http" | "script";
-  url?: string;
+  targetType: "HTTP" | "SCRIPT";
+  targetUrl?: string;
   httpMethod?: string;
-  httpHeaders?: Record<string, string>;
-  httpBody?: string;
-  script?: string;
-  isActive: boolean;
+  headers?: Record<string, string>;
+  payload?: string;
+  command?: string;
+  status: "ACTIVE" | "PAUSED";
+  maxRetries: number;
   retryCount: number;
-  retryDelay: number;
   timeout: number;
   lastRunAt?: string;
-  lastRunStatus?: string;
+  lastStatus?: string;
   nextRunAt?: string;
   createdAt: string;
   updatedAt: string;
@@ -153,17 +153,17 @@ export interface ExecutionLog {
 
 export interface CreateJobData {
   name: string;
-  schedule: string;
+  cronExpression: string;
   timezone?: string;
-  type: "http" | "script";
-  url?: string;
+  targetType: "HTTP" | "SCRIPT";
+  targetUrl?: string;
   httpMethod?: string;
-  httpHeaders?: Record<string, string>;
-  httpBody?: string;
-  script?: string;
+  headers?: Record<string, string>;
+  payload?: string;
+  command?: string;
   isActive?: boolean;
   retryCount?: number;
-  retryDelay?: number;
+  maxRetries?: number;
   timeout?: number;
 }
 

@@ -67,9 +67,9 @@ export default function JobsPage() {
     try {
       const response = await jobsApi.getAll({
         search: searchQuery || undefined,
-        isActive: statusFilter === "all" ? undefined : statusFilter === "active",
+        status: statusFilter === "all" ? undefined : statusFilter === "active" ? "ACTIVE" : "PAUSED",
       });
-      setJobs(response.data.jobs);
+      setJobs(response.data.data?.jobs || []);
     } catch (error) {
       console.error("Failed to fetch jobs:", error);
       toast({
@@ -89,15 +89,19 @@ export default function JobsPage() {
 
   const handleToggleStatus = async (job: CronJob) => {
     try {
-      await jobsApi.update(job.id, { isActive: !job.isActive });
+      if (job.status === 'ACTIVE') {
+        await jobsApi.pause(job.id);
+      } else {
+        await jobsApi.resume(job.id);
+      }
       setJobs(
         jobs.map((j) =>
-          j.id === job.id ? { ...j, isActive: !j.isActive } : j
+          j.id === job.id ? { ...j, status: job.status === 'ACTIVE' ? 'PAUSED' : 'ACTIVE' } : j
         )
       );
       toast({
-        title: job.isActive ? "Job paused" : "Job activated",
-        description: `${job.name} has been ${job.isActive ? "paused" : "activated"}.`,
+        title: job.status === 'ACTIVE' ? "Job paused" : "Job activated",
+        description: `${job.name} has been ${job.status === 'ACTIVE' ? "paused" : "activated"}.`,
       });
     } catch {
       toast({
@@ -153,8 +157,8 @@ export default function JobsPage() {
       const query = searchQuery.toLowerCase();
       return (
         job.name.toLowerCase().includes(query) ||
-        job.schedule.toLowerCase().includes(query) ||
-        job.url?.toLowerCase().includes(query)
+        job.cronExpression.toLowerCase().includes(query) ||
+        job.targetUrl?.toLowerCase().includes(query)
       );
     }
     return true;
@@ -274,7 +278,7 @@ export default function JobsPage() {
                       <div className="flex items-center gap-4 min-w-0 flex-1">
                         <div
                           className={`h-3 w-3 rounded-full shrink-0 ${
-                            job.isActive
+                            job.status === 'ACTIVE'
                               ? "bg-emerald-500 shadow-lg shadow-emerald-500/50"
                               : "bg-muted-foreground"
                           }`}
@@ -288,29 +292,29 @@ export default function JobsPage() {
                               {job.name}
                             </Link>
                             <Badge
-                              variant={job.isActive ? "success" : "secondary"}
+                              variant={job.status === 'ACTIVE' ? "success" : "secondary"}
                             >
-                              {job.isActive ? "Active" : "Paused"}
+                              {job.status === 'ACTIVE' ? "Active" : "Paused"}
                             </Badge>
-                            <Badge variant="outline">{job.type}</Badge>
+                            <Badge variant="outline">{job.targetType}</Badge>
                           </div>
                           <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
                             <span className="font-mono bg-muted px-2 py-0.5 rounded">
-                              {job.schedule}
+                              {job.cronExpression}
                             </span>
-                            {job.url && (
+                            {job.targetUrl && (
                               <span className="flex items-center gap-1 truncate max-w-xs">
                                 <ExternalLink className="h-3 w-3 shrink-0" />
-                                <span className="truncate">{job.url}</span>
+                                <span className="truncate">{job.targetUrl}</span>
                               </span>
                             )}
                           </div>
                           {job.lastRunAt && (
                             <p className="text-xs text-muted-foreground mt-1">
                               Last run: {formatDate(job.lastRunAt)}
-                              {job.lastRunStatus && (
+                              {job.lastStatus && (
                                 <span className="ml-2">
-                                  {job.lastRunStatus === "success" ? (
+                                  {job.lastStatus === "success" ? (
                                     <CheckCircle2 className="inline h-3 w-3 text-emerald-500" />
                                   ) : (
                                     <XCircle className="inline h-3 w-3 text-red-500" />
@@ -334,9 +338,9 @@ export default function JobsPage() {
                           variant="ghost"
                           size="sm"
                           onClick={() => handleToggleStatus(job)}
-                          title={job.isActive ? "Pause" : "Activate"}
+                          title={job.status === 'ACTIVE' ? "Pause" : "Activate"}
                         >
-                          {job.isActive ? (
+                          {job.status === 'ACTIVE' ? (
                             <Pause className="h-4 w-4" />
                           ) : (
                             <Play className="h-4 w-4" />

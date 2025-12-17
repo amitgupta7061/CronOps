@@ -65,8 +65,8 @@ export default function JobDetailPage({
         jobsApi.getById(id),
         logsApi.getByJobId(id),
       ]);
-      setJob(jobRes.data);
-      setLogs(logsRes.data.logs);
+      setJob(jobRes.data.data);
+      setLogs(logsRes.data.data?.logs || []);
     } catch (error) {
       console.error("Failed to fetch job:", error);
       toast({
@@ -86,11 +86,16 @@ export default function JobDetailPage({
   const handleToggleStatus = async () => {
     if (!job) return;
     try {
-      await jobsApi.update(id, { isActive: !job.isActive });
-      setJob({ ...job, isActive: !job.isActive });
+      if (job.status === 'ACTIVE') {
+        await jobsApi.pause(id);
+        setJob({ ...job, status: 'PAUSED' });
+      } else {
+        await jobsApi.resume(id);
+        setJob({ ...job, status: 'ACTIVE' });
+      }
       toast({
-        title: job.isActive ? "Job paused" : "Job activated",
-        description: `${job.name} has been ${job.isActive ? "paused" : "activated"}.`,
+        title: job.status === 'ACTIVE' ? "Job paused" : "Job activated",
+        description: `${job.name} has been ${job.status === 'ACTIVE' ? "paused" : "activated"}.`,
       });
     } catch (error) {
       toast({
@@ -214,11 +219,11 @@ export default function JobDetailPage({
                 <h1 className="text-3xl font-bold text-foreground">
                   {job.name}
                 </h1>
-                <Badge variant={job.isActive ? "success" : "secondary"}>
-                  {job.isActive ? "Active" : "Paused"}
+                <Badge variant={job.status === 'ACTIVE' ? "success" : "secondary"}>
+                  {job.status === 'ACTIVE' ? "Active" : "Paused"}
                 </Badge>
               </div>
-              <p className="text-muted-foreground font-mono mt-1">{job.schedule}</p>
+              <p className="text-muted-foreground font-mono mt-1">{job.cronExpression}</p>
             </div>
           </div>
           <div className="flex items-center gap-2">
@@ -227,7 +232,7 @@ export default function JobDetailPage({
               Run Now
             </Button>
             <Button variant="outline" onClick={handleToggleStatus}>
-              {job.isActive ? (
+              {job.status === 'ACTIVE' ? (
                 <>
                   <Pause className="h-4 w-4 mr-2" />
                   Pause
@@ -273,7 +278,7 @@ export default function JobDetailPage({
                 <Card>
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
-                      {job.type === "http" ? (
+                      {job.targetType === "HTTP" ? (
                         <Globe className="h-5 w-5 text-primary" />
                       ) : (
                         <Terminal className="h-5 w-5 text-primary" />
@@ -285,7 +290,7 @@ export default function JobDetailPage({
                     <div className="grid grid-cols-2 gap-4">
                       <div>
                         <p className="text-sm text-muted-foreground">Type</p>
-                        <p className="font-medium capitalize">{job.type}</p>
+                        <p className="font-medium">{job.targetType}</p>
                       </div>
                       <div>
                         <p className="text-sm text-muted-foreground">Timezone</p>
@@ -293,29 +298,29 @@ export default function JobDetailPage({
                       </div>
                     </div>
 
-                    {job.type === "http" && (
+                    {job.targetType === "HTTP" && (
                       <>
                         <div>
                           <p className="text-sm text-muted-foreground">URL</p>
                           <div className="flex items-center gap-2">
                             <Badge variant="outline">{job.httpMethod}</Badge>
                             <a
-                              href={job.url}
+                              href={job.targetUrl}
                               target="_blank"
                               rel="noopener noreferrer"
                               className="font-mono text-sm text-primary hover:text-primary/80 truncate flex items-center gap-1"
                             >
-                              {job.url}
+                              {job.targetUrl}
                               <ExternalLink className="h-3 w-3 shrink-0" />
                             </a>
                           </div>
                         </div>
 
-                        {job.httpHeaders && Object.keys(job.httpHeaders).length > 0 && (
+                        {job.headers && Object.keys(job.headers).length > 0 && (
                           <div>
                             <p className="text-sm text-muted-foreground mb-2">Headers</p>
                             <div className="bg-muted rounded-lg p-3 font-mono text-sm">
-                              {Object.entries(job.httpHeaders).map(([key, value]) => (
+                              {Object.entries(job.headers).map(([key, value]) => (
                                 <div key={key}>
                                   <span className="text-primary">{key}</span>:{" "}
                                   <span className="text-muted-foreground">
@@ -327,22 +332,22 @@ export default function JobDetailPage({
                           </div>
                         )}
 
-                        {job.httpBody && (
+                        {job.payload && (
                           <div>
                             <p className="text-sm text-muted-foreground mb-2">Body</p>
                             <pre className="bg-muted rounded-lg p-3 font-mono text-sm overflow-auto max-h-48">
-                              {job.httpBody}
+                              {job.payload}
                             </pre>
                           </div>
                         )}
                       </>
                     )}
 
-                    {job.type === "script" && job.script && (
+                    {job.targetType === "SCRIPT" && job.command && (
                       <div>
                         <p className="text-sm text-muted-foreground mb-2">Script</p>
                         <pre className="bg-muted rounded-lg p-3 font-mono text-sm overflow-auto max-h-48">
-                          {job.script}
+                          {job.command}
                         </pre>
                       </div>
                     )}
@@ -364,22 +369,16 @@ export default function JobDetailPage({
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <div className="grid grid-cols-3 gap-4">
+                    <div className="grid grid-cols-2 gap-4">
                       <div className="text-center p-4 bg-muted rounded-lg">
                         <p className="text-2xl font-bold text-foreground">
-                          {job.retryCount}
+                          {job.maxRetries}
                         </p>
-                        <p className="text-sm text-muted-foreground">Retry Count</p>
+                        <p className="text-sm text-muted-foreground">Max Retries</p>
                       </div>
                       <div className="text-center p-4 bg-muted rounded-lg">
                         <p className="text-2xl font-bold text-foreground">
-                          {job.retryDelay}s
-                        </p>
-                        <p className="text-sm text-muted-foreground">Retry Delay</p>
-                      </div>
-                      <div className="text-center p-4 bg-muted rounded-lg">
-                        <p className="text-2xl font-bold text-foreground">
-                          {job.timeout}s
+                          {Math.floor(job.timeout / 1000)}s
                         </p>
                         <p className="text-sm text-muted-foreground">Timeout</p>
                       </div>

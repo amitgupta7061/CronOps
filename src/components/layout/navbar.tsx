@@ -54,7 +54,7 @@ export function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-2">
+          <Link href="/" className="flex items-center gap-2">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary">
               <Clock className="h-5 w-5 text-primary-foreground" />
             </div>
@@ -84,13 +84,6 @@ export function Navbar() {
                   </Link>
                 );
               })}
-              <Link
-                href="/jobs/new"
-                className="flex items-center gap-2 px-4 py-2 ml-2 rounded-lg text-sm font-medium bg-primary text-primary-foreground hover:opacity-90 transition-all duration-200"
-              >
-                <Plus className="h-4 w-4" />
-                New Job
-              </Link>
             </nav>
           )}
 
@@ -180,14 +173,6 @@ export function Navbar() {
                   </Link>
                 );
               })}
-              <Link
-                href="/jobs/new"
-                onClick={() => setMobileMenuOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 mt-2 rounded-lg text-sm font-medium bg-primary text-primary-foreground"
-              >
-                <Plus className="h-5 w-5" />
-                Create New Job
-              </Link>
             </nav>
           </div>
         )}

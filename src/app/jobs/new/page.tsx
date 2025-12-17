@@ -85,7 +85,6 @@ export default function NewJobPage() {
     retryCount: 3,
     retryDelay: 60,
     timeout: 30,
-    isActive: true,
   });
 
   const handleAddHeader = () => {
@@ -121,18 +120,16 @@ export default function NewJobPage() {
 
       await jobsApi.create({
         name: formData.name,
-        schedule: formData.schedule,
+        cronExpression: formData.schedule,
         timezone: formData.timezone,
-        type: jobType,
-        url: jobType === "http" ? formData.url : undefined,
+        targetType: jobType === "http" ? "HTTP" : "SCRIPT",
+        targetUrl: jobType === "http" ? formData.url : undefined,
         httpMethod: jobType === "http" ? formData.httpMethod : undefined,
-        httpHeaders: jobType === "http" && Object.keys(httpHeaders).length > 0 ? httpHeaders : undefined,
-        httpBody: jobType === "http" && formData.httpBody ? formData.httpBody : undefined,
-        script: jobType === "script" ? formData.script : undefined,
-        retryCount: formData.retryCount,
-        retryDelay: formData.retryDelay,
-        timeout: formData.timeout,
-        isActive: formData.isActive,
+        headers: jobType === "http" && Object.keys(httpHeaders).length > 0 ? httpHeaders : undefined,
+        payload: jobType === "http" && formData.httpBody ? formData.httpBody : undefined,
+        command: jobType === "script" ? formData.script : undefined,
+        maxRetries: formData.retryCount,
+        timeout: formData.timeout * 1000, // Convert seconds to milliseconds
       });
 
       toast({

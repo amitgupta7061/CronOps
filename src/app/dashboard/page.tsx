@@ -52,9 +52,9 @@ export default function DashboardPage() {
           jobsApi.getAll({ limit: 5 }),
           logsApi.getAll({ limit: 8 }),
         ]);
-        setStats(statsRes.data);
-        setRecentJobs(jobsRes.data.jobs || []);
-        setRecentLogs(logsRes.data.logs || []);
+        setStats(statsRes.data.data);
+        setRecentJobs(jobsRes.data.data?.jobs || []);
+        setRecentLogs(logsRes.data.data?.logs || []);
       } catch (error) {
         console.error("Failed to fetch dashboard data:", error);
       } finally {
@@ -358,17 +358,17 @@ export default function DashboardPage() {
                         <div className="flex items-center gap-3">
                           <div className="relative">
                             <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${
-                              job.isActive 
+                              job.status === 'ACTIVE' 
                                 ? 'bg-chart-2/20' 
                                 : 'bg-muted'
                             }`}>
-                              {job.isActive ? (
+                              {job.status === 'ACTIVE' ? (
                                 <Play className="h-5 w-5 text-chart-2" />
                               ) : (
                                 <Pause className="h-5 w-5 text-muted-foreground" />
                               )}
                             </div>
-                            {job.isActive && (
+                            {job.status === 'ACTIVE' && (
                               <span className="absolute -top-1 -right-1 h-3 w-3 rounded-full bg-chart-2 border-2 border-card" />
                             )}
                           </div>
@@ -377,12 +377,12 @@ export default function DashboardPage() {
                               {job.name}
                             </p>
                             <p className="text-sm text-muted-foreground font-mono">
-                              {job.schedule}
+                              {job.cronExpression}
                             </p>
                           </div>
                         </div>
-                        <Badge variant={job.isActive ? "success" : "secondary"}>
-                          {job.isActive ? "Active" : "Paused"}
+                        <Badge variant={job.status === 'ACTIVE' ? "success" : "secondary"}>
+                          {job.status === 'ACTIVE' ? "Active" : "Paused"}
                         </Badge>
                       </Link>
                     ))}
