@@ -311,12 +311,12 @@ export default function AdminDashboard() {
                     <div className="flex items-center gap-3">
                       <div
                         className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                          execution.status === "SUCCESS"
+                          execution.status.toLowerCase() === "success"
                             ? "bg-green-500/10"
                             : "bg-red-500/10"
                         }`}
                       >
-                        {execution.status === "SUCCESS" ? (
+                        {execution.status.toLowerCase() === "success" ? (
                           <CheckCircle className="h-4 w-4 text-green-500" />
                         ) : (
                           <XCircle className="h-4 w-4 text-red-500" />

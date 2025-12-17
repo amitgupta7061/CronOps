@@ -81,7 +81,7 @@ export default function LogsPage() {
   }, [statusFilter, jobFilter, page]);
 
   const getStatusIcon = (status: string) => {
-    switch (status) {
+    switch (status.toLowerCase()) {
       case "success":
         return <CheckCircle2 className="h-5 w-5 text-emerald-500" />;
       case "failed":
@@ -92,7 +92,7 @@ export default function LogsPage() {
   };
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
+    switch (status.toLowerCase()) {
       case "success":
         return <Badge variant="success">Success</Badge>;
       case "failed":

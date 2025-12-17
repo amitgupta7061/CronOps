@@ -86,7 +86,7 @@ export default function AdminLogsPage() {
   };
 
   const getStatusIcon = (status: string) => {
-    switch (status) {
+    switch (status.toUpperCase()) {
       case "SUCCESS":
         return <CheckCircle className="h-5 w-5 text-green-500" />;
       case "FAILED":
@@ -101,7 +101,7 @@ export default function AdminLogsPage() {
   };
 
   const getStatusBadgeVariant = (status: string) => {
-    switch (status) {
+    switch (status.toUpperCase()) {
       case "SUCCESS":
         return "success";
       case "FAILED":
@@ -171,11 +171,11 @@ export default function AdminLogsPage() {
                   <div className="flex items-center gap-4">
                     <div
                       className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                        log.status === "SUCCESS"
+                        log.status.toUpperCase() === "SUCCESS"
                           ? "bg-green-500/10"
-                          : log.status === "FAILED"
+                          : log.status.toUpperCase() === "FAILED"
                           ? "bg-red-500/10"
-                          : log.status === "RUNNING"
+                          : log.status.toUpperCase() === "RUNNING"
                           ? "bg-blue-500/10"
                           : "bg-yellow-500/10"
                       }`}

@@ -161,7 +161,7 @@ export interface ExecutionLog {
     id: string;
     name: string;
   };
-  status: "success" | "failed" | "running";
+  status: "SUCCESS" | "FAILED" | "success" | "failed" | "running";
   statusCode?: number;
   response?: string | Record<string, unknown>;
   error?: string;
@@ -187,13 +187,17 @@ export interface CreateJobData {
 }
 
 export interface Stats {
-  totalJobs: number;
-  activeJobs: number;
-  pausedJobs: number;
-  totalExecutions: number;
-  successfulExecutions: number;
-  failedExecutions: number;
-  successRate: number;
+  jobs: {
+    total: number;
+    active: number;
+    paused: number;
+  };
+  executions: {
+    total: number;
+    successful: number;
+    failed: number;
+    successRate: number | string;
+  };
 }
 
 export interface DashboardStats {

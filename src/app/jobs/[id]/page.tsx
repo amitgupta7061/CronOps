@@ -148,7 +148,7 @@ export default function JobDetailPage({
   };
 
   const getStatusIcon = (status: string) => {
-    switch (status) {
+    switch (status.toLowerCase()) {
       case "success":
         return <CheckCircle2 className="h-4 w-4 text-emerald-500" />;
       case "failed":
@@ -159,7 +159,7 @@ export default function JobDetailPage({
   };
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
+    switch (status.toLowerCase()) {
       case "success":
         return <Badge variant="success">Success</Badge>;
       case "failed":
@@ -409,9 +409,9 @@ export default function JobDetailPage({
                             <div>
                               <p className="text-muted-foreground">Last Status</p>
                               <div className="flex items-center gap-2">
-                                {getStatusIcon(job.lastRunStatus || "unknown")}
+                                {getStatusIcon(job.lastStatus || "unknown")}
                                 <span className="font-medium capitalize">
-                                  {job.lastRunStatus || "Unknown"}
+                                  {job.lastStatus || "Unknown"}
                                 </span>
                               </div>
                             </div>

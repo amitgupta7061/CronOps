@@ -24,25 +24,15 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { statsApi, jobsApi, logsApi } from "@/lib/api";
-import type { CronJob, ExecutionLog } from "@/lib/api";
+import type { CronJob, ExecutionLog, Stats } from "@/lib/api";
 import { formatDate, formatDuration } from "@/lib/utils";
 import { useAuthStore } from "@/lib/store";
 import Link from "next/link";
 
-interface DashboardStats {
-  totalJobs: number;
-  activeJobs: number;
-  pausedJobs: number;
-  totalExecutions: number;
-  successfulExecutions: number;
-  failedExecutions: number;
-  successRate: number;
-}
-
 export default function DashboardPage() {
   const router = useRouter();
   const { user } = useAuthStore();
-  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [stats, setStats] = useState<Stats | null>(null);
   const [recentJobs, setRecentJobs] = useState<CronJob[]>([]);
   const [recentLogs, setRecentLogs] = useState<ExecutionLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -75,7 +65,7 @@ export default function DashboardPage() {
   }, []);
 
   const getStatusIcon = (status: string) => {
-    switch (status) {
+    switch (status.toLowerCase()) {
       case "success":
         return <CheckCircle2 className="h-4 w-4 text-chart-2" />;
       case "failed":
@@ -86,7 +76,7 @@ export default function DashboardPage() {
   };
 
   const getStatusBadge = (status: string) => {
-    switch (status) {
+    switch (status.toLowerCase()) {
       case "success":
         return <Badge variant="success">Success</Badge>;
       case "failed":
@@ -111,6 +101,10 @@ export default function DashboardPage() {
       </DashboardLayout>
     );
   }
+
+  const successRate = typeof stats?.executions.successRate === 'string' 
+    ? parseFloat(stats.executions.successRate) 
+    : (stats?.executions.successRate || 0);
 
   return (
     <DashboardLayout>
@@ -138,7 +132,7 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-primary-foreground/80 text-sm font-medium">Total Jobs</p>
-                    <p className="text-4xl font-bold mt-2">{stats?.totalJobs || 0}</p>
+                    <p className="text-4xl font-bold mt-2">{stats?.jobs.total || 0}</p>
                     <p className="text-primary-foreground/60 text-xs mt-2">All scheduled tasks</p>
                   </div>
                   <div className="h-14 w-14 rounded-2xl bg-primary-foreground/20 flex items-center justify-center">
@@ -160,7 +154,7 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-muted-foreground text-sm font-medium">Active Jobs</p>
-                    <p className="text-4xl font-bold mt-2 text-foreground">{stats?.activeJobs || 0}</p>
+                    <p className="text-4xl font-bold mt-2 text-foreground">{stats?.jobs.active || 0}</p>
                     <div className="flex items-center gap-1 mt-2">
                       <div className="h-2 w-2 rounded-full bg-chart-2 animate-pulse" />
                       <span className="text-muted-foreground text-xs">Running now</span>
@@ -185,7 +179,7 @@ export default function DashboardPage() {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-muted-foreground text-sm font-medium">Executions</p>
-                    <p className="text-4xl font-bold mt-2 text-foreground">{stats?.totalExecutions || 0}</p>
+                    <p className="text-4xl font-bold mt-2 text-foreground">{stats?.executions.total || 0}</p>
                     <p className="text-muted-foreground text-xs mt-2">Total runs all time</p>
                   </div>
                   <div className="h-14 w-14 rounded-2xl bg-chart-3/20 flex items-center justify-center">
@@ -203,9 +197,9 @@ export default function DashboardPage() {
             transition={{ duration: 0.3, delay: 0.3 }}
           >
             <Card className={`relative overflow-hidden ${
-              (stats?.successRate || 0) >= 90 
+              successRate >= 90 
                 ? 'border border-chart-1/50 bg-chart-1/10' 
-                : (stats?.successRate || 0) >= 70 
+                : successRate >= 70 
                   ? 'border border-chart-4/50 bg-chart-4/10'
                   : 'border border-destructive/50 bg-destructive/10'
             }`}>
@@ -214,28 +208,28 @@ export default function DashboardPage() {
                   <div>
                     <p className="text-muted-foreground text-sm font-medium">Success Rate</p>
                     <p className="text-4xl font-bold mt-2 text-foreground">
-                      {stats?.successRate?.toFixed(1) || 0}%
+                      {successRate.toFixed(1)}%
                     </p>
                     <div className="flex items-center gap-1 mt-2">
-                      {(stats?.successRate || 0) >= 90 ? (
-                        <ArrowUpRight className={`h-3 w-3 ${(stats?.successRate || 0) >= 90 ? 'text-chart-1' : (stats?.successRate || 0) >= 70 ? 'text-chart-4' : 'text-destructive'}`} />
+                      {successRate >= 90 ? (
+                        <ArrowUpRight className={`h-3 w-3 ${successRate >= 90 ? 'text-chart-1' : successRate >= 70 ? 'text-chart-4' : 'text-destructive'}`} />
                       ) : (
-                        <ArrowDownRight className={`h-3 w-3 ${(stats?.successRate || 0) >= 90 ? 'text-chart-1' : (stats?.successRate || 0) >= 70 ? 'text-chart-4' : 'text-destructive'}`} />
+                        <ArrowDownRight className={`h-3 w-3 ${successRate >= 90 ? 'text-chart-1' : successRate >= 70 ? 'text-chart-4' : 'text-destructive'}`} />
                       )}
                       <span className="text-muted-foreground text-xs">Last 30 days</span>
                     </div>
                   </div>
                   <div className={`h-14 w-14 rounded-2xl flex items-center justify-center ${
-                    (stats?.successRate || 0) >= 90 
+                    successRate >= 90 
                       ? 'bg-chart-1/20' 
-                      : (stats?.successRate || 0) >= 70 
+                      : successRate >= 70 
                         ? 'bg-chart-4/20'
                         : 'bg-destructive/20'
                   }`}>
                     <TrendingUp className={`h-7 w-7 ${
-                      (stats?.successRate || 0) >= 90 
+                      successRate >= 90 
                         ? 'text-chart-1' 
-                        : (stats?.successRate || 0) >= 70 
+                        : successRate >= 70 
                           ? 'text-chart-4'
                           : 'text-destructive'
                     }`} />
@@ -260,7 +254,7 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-foreground">
-                    {stats?.successfulExecutions || 0}
+                    {stats?.executions.successful || 0}
                   </p>
                   <p className="text-sm text-muted-foreground">Successful Runs</p>
                 </div>
@@ -280,7 +274,7 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-foreground">
-                    {stats?.failedExecutions || 0}
+                    {stats?.executions.failed || 0}
                   </p>
                   <p className="text-sm text-muted-foreground">Failed Runs</p>
                 </div>
@@ -300,7 +294,7 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <p className="text-2xl font-bold text-foreground">
-                    {stats?.pausedJobs || 0}
+                    {stats?.jobs.paused || 0}
                   </p>
                   <p className="text-sm text-muted-foreground">Paused Jobs</p>
                 </div>
@@ -449,9 +443,9 @@ export default function DashboardPage() {
                       >
                         <div className="flex items-center gap-3">
                           <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${
-                            log.status === 'success' 
+                            log.status.toLowerCase() === 'success' 
                               ? 'bg-chart-2/20' 
-                              : log.status === 'failed'
+                              : log.status.toLowerCase() === 'failed'
                                 ? 'bg-destructive/20'
                                 : 'bg-chart-4/20'
                           }`}>
