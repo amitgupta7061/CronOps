@@ -48,6 +48,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
+import { useAuthStore } from "@/lib/store";
 import { useToast } from "@/components/ui/use-toast";
 import { jobsApi } from "@/lib/api";
 import type { CronJob } from "@/lib/api";
@@ -55,6 +56,7 @@ import { formatDate } from "@/lib/utils";
 
 export default function JobsPage() {
   const { toast } = useToast();
+  const { user } = useAuthStore();
   const [jobs, setJobs] = useState<CronJob[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
@@ -187,15 +189,22 @@ export default function JobsPage() {
               Jobs
             </h1>
             <p className="text-muted-foreground mt-1">
-              Manage your scheduled cron jobs
+              Manage your schedule ({jobs.length} / {(user?.role === 'ADMIN' || user?.plan === 'PRO') ? '∞' : (user?.plan === 'PREMIUM' ? 100 : 3)} jobs used)
             </p>
           </div>
-          <Link href="/jobs/new">
-            <Button className="gap-2">
+          {(user?.role === 'ADMIN' || user?.plan === 'PRO' || jobs.length < (user?.plan === 'PREMIUM' ? 100 : 3)) ? (
+            <Link href="/jobs/new">
+              <Button className="gap-2">
+                <Plus className="h-4 w-4" />
+                New Job
+              </Button>
+            </Link>
+          ) : (
+            <Button className="gap-2" disabled>
               <Plus className="h-4 w-4" />
-              New Job
+              Limit Reached
             </Button>
-          </Link>
+          )}
         </div>
 
         {/* Filters */}

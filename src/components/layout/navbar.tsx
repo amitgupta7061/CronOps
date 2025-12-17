@@ -13,6 +13,7 @@ import {
   Calendar,
   Menu,
   X,
+  CreditCard,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuthStore } from "@/lib/store";
@@ -32,6 +33,7 @@ const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, roles: ["USER"] },
   { name: "Jobs", href: "/jobs", icon: Calendar, roles: ["USER"] },
   { name: "Logs", href: "/logs", icon: Clock, roles: ["USER"] },
+  { name: "Pricing", href: "/pricing", icon: CreditCard, roles: ["USER"] },
 ];
 
 export function Navbar() {

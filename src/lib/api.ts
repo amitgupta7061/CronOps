@@ -119,12 +119,20 @@ export const adminApi = {
     api.get("/admin/logs", { params }),
 };
 
+// Users API
+export const usersApi = {
+  updatePlan: (plan: Plan) => api.put("/users/plan", { plan }),
+};
+
 // Types
+export type Plan = "FREE" | "PREMIUM" | "PRO";
+
 export interface User {
   id: string;
   email: string;
   name: string;
   role?: "USER" | "ADMIN";
+  plan?: Plan;
   isVerified?: boolean;
   jobCount?: number;
   createdAt: string;

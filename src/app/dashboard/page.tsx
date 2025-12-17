@@ -8,7 +8,6 @@ import {
   CheckCircle2,
   XCircle,
   Play,
-  TrendingUp,
   Activity,
   Calendar,
   Timer,
@@ -18,6 +17,8 @@ import {
   Plus,
   Pause,
   RotateCcw,
+  CreditCard,
+  TrendingUp,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -297,6 +298,107 @@ export default function DashboardPage() {
                     {stats?.jobs.paused || 0}
                   </p>
                   <p className="text-sm text-muted-foreground">Paused Jobs</p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* Plan Usage */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.55 }}
+          >
+           <Card className="h-full border-primary/20 bg-primary/5">
+              <CardHeader>
+               <div className="flex items-center justify-between">
+                 <div className="flex items-center gap-3">
+                   <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                     <CreditCard className="h-5 w-5 text-primary" />
+                   </div>
+                   <div>
+                     <CardTitle className="text-lg">Plan Usage</CardTitle>
+                     <CardDescription>{user?.plan || "FREE"} Plan</CardDescription>
+                   </div>
+                 </div>
+                 <Link href="/pricing">
+                   <Button variant="outline" size="sm">Manage Plan</Button>
+                 </Link>
+               </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex text-sm justify-between mb-2">
+                      <span className="text-muted-foreground">Active Jobs</span>
+                      <span className="font-medium">
+                        {stats?.jobs.total || 0} / {(user?.plan === "PRO" || user?.role === "ADMIN") ? "∞" : (user?.plan === "PREMIUM" ? 100 : 3)}
+                      </span>
+                    </div>
+                    <div className="h-2 bg-secondary rounded-full overflow-hidden">
+                      <div 
+                        className="h-full bg-primary transition-all duration-500"
+                        style={{ 
+                          width: `${Math.min(100, ((stats?.jobs.total || 0) / ((user?.plan === "PRO" || user?.role === "ADMIN") ? 100 : (user?.plan === "PREMIUM" ? 100 : 3))) * 100)}%` 
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    {(user?.plan === "PRO" || user?.role === "ADMIN") 
+                      ? "You have unlimited jobs." 
+                      : `Upgrade to Pro for unlimited jobs.`}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Pricing Info */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.6 }}
+          >
+            <Card className="h-full border-border">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="h-10 w-10 rounded-xl bg-chart-1/10 flex items-center justify-center">
+                      <TrendingUp className="h-5 w-5 text-chart-1" />
+                    </div>
+                    <div>
+                      <CardTitle className="text-lg">
+                        {(user?.plan === "PRO" || user?.role === "ADMIN") ? "Pro Plan Active" : "Unlock More Power"}
+                      </CardTitle>
+                      <CardDescription>
+                        {user?.plan === "PREMIUM" ? "Go Unlimited" : "Upgrade your experience"}
+                      </CardDescription>
+                    </div>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground">
+                    {(user?.plan === "PRO" || user?.role === "ADMIN") 
+                      ? "You are enjoying our most powerful features with unlimited job scheduling and 24/7 support."
+                      : user?.plan === "PREMIUM"
+                        ? "Upgrade to Pro for unlimited cron jobs, real-time analytics, and dedicated 24/7 support."
+                        : "Get up to 100 active jobs, priority support, and advanced analytics with our Premium plan."
+                    }
+                  </p>
+                  {(user?.plan !== "PRO" && user?.role !== "ADMIN") && (
+                    <div className="flex items-center gap-4 pt-2">
+                       <Link href="/pricing" className="w-full">
+                        <Button className="w-full" variant="secondary">
+                          View Plans & Pricing
+                        </Button>
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </CardContent>
             </Card>
