@@ -26,7 +26,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { statsApi, jobsApi, logsApi } from "@/lib/api";
-import type { CronJob, ExecutionLog, Stats } from "@/lib/api";
+import type { CronJob, ExecutionLog } from "@/lib/api";
 import { formatDate, formatDuration } from "@/lib/utils";
 import { useAuthStore } from "@/lib/store";
 import Link from "next/link";
@@ -49,26 +49,55 @@ export default function DashboardPage() {
     },
   });
 
+  /* 
+    Updated to match Jobs Page query key: ["jobs", searchQuery, statusFilter] 
+    We fetch all jobs without limit here to prime the cache for the Jobs page.
+    This makes navigation to /jobs instant.
+  */
   const { data: jobsData, isLoading: isJobsLoading } = useQuery({
-    queryKey: ["dashboard-jobs"],
+    queryKey: ["jobs", "", "all"],
     queryFn: async () => {
-      const response = await jobsApi.getAll({ limit: 5 });
+      // Fetch with same default params as Jobs page
+      const response = await jobsApi.getAll({ 
+        search: undefined, 
+        status: undefined 
+      });
       return response.data.data?.jobs || [];
     },
   });
 
+  /* 
+    Updated to match Logs Page query key: ["logs", statusFilter, jobFilter, page]
+    We fetch the first page of 20 logs to prime the cache for the Logs page.
+  */
   const { data: logsData, isLoading: isLogsLoading } = useQuery({
-    queryKey: ["dashboard-logs"],
+    queryKey: ["logs", "all", "all", 1],
     queryFn: async () => {
-      const response = await logsApi.getAll({ limit: 8 });
-      return response.data.data?.logs || [];
+      // Fetch with same default params as Logs page (limit 20)
+      const response = await logsApi.getAll({ 
+        limit: 20,
+        page: 1,
+        status: undefined,
+        jobId: undefined 
+      });
+      // Return full object { logs, pagination } to share cache with Logs page
+      return response.data.data;
     },
   });
 
   const isLoading = isStatsLoading || isJobsLoading || isLogsLoading;
   const stats = statsData;
-  const recentJobs = jobsData || [];
-  const recentLogs = logsData || [];
+  /*
+    Since we are now fetching ALL jobs (to prime cache), we need to slice 
+    the array here to only show the top 5 recent jobs on the dashboard.
+  */
+  const recentJobs = jobsData?.slice(0, 5) || [];
+  
+  /*
+    Since we are fetching 20 logs (to prime cache), we need to slice 
+    to only show the top 8 recent logs on the dashboard.
+  */
+  const recentLogs = logsData?.logs?.slice(0, 8) || [];
 
   const getStatusIcon = (status: string) => {
     switch (status.toLowerCase()) {
