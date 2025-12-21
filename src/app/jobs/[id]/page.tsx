@@ -68,7 +68,9 @@ export default function JobDetailPage({
         logsApi.getByJobId(id),
       ]);
       setJob(jobRes.data.data);
-      setLogs(logsRes.data.data?.logs || []);
+      // Backend returns logs as data directly (array), not data.logs
+      const logsData = logsRes.data.data;
+      setLogs(Array.isArray(logsData) ? logsData : logsData?.logs || []);
     } catch (error) {
       console.error("Failed to fetch job:", error);
       toast({
