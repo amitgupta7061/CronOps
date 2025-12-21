@@ -22,8 +22,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { adminApi, User } from "@/lib/api";
+import { adminApi } from "@/lib/api";
 import { useAuthStore } from "@/lib/store";
+import { useAdminStore, UserWithCount } from "@/lib/admin-store";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Users,
@@ -38,16 +39,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-interface UserWithCount extends User {
-  jobCount: number;
-}
-
 export default function AdminUsersPage() {
   const router = useRouter();
   const { user: currentUser, isLoading: authLoading } = useAuthStore();
+  const { users, usersLoading, fetchUsers, updateUserInCache, removeUserFromCache } = useAdminStore();
   const { toast } = useToast();
-  const [users, setUsers] = useState<UserWithCount[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUser, setSelectedUser] = useState<UserWithCount | null>(null);
   const [roleDialogOpen, setRoleDialogOpen] = useState(false);
@@ -62,25 +58,16 @@ export default function AdminUsersPage() {
     }
 
     if (currentUser?.role === "ADMIN") {
-      fetchUsers();
+      fetchUsers().catch(() => {
+        toast({
+          title: "Error",
+          description: "Failed to load users",
+          variant: "destructive",
+        });
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, authLoading, router]);
-
-  const fetchUsers = async () => {
-    try {
-      const response = await adminApi.getUsers({ limit: 100 });
-      setUsers(response.data.data.users);
-    } catch {
-      toast({
-        title: "Error",
-        description: "Failed to load users",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const handleRoleChange = async () => {
     if (!selectedUser) return;
@@ -88,11 +75,7 @@ export default function AdminUsersPage() {
 
     try {
       await adminApi.updateUserRole(selectedUser.id, newRole);
-      setUsers(
-        users.map((u) =>
-          u.id === selectedUser.id ? { ...u, role: newRole } : u
-        )
-      );
+      updateUserInCache(selectedUser.id, { role: newRole });
       toast({
         title: "Role updated",
         description: `${selectedUser.email} is now a ${newRole}`,
@@ -115,7 +98,7 @@ export default function AdminUsersPage() {
 
     try {
       await adminApi.deleteUser(selectedUser.id);
-      setUsers(users.filter((u) => u.id !== selectedUser.id));
+      removeUserFromCache(selectedUser.id);
       toast({
         title: "User deleted",
         description: `${selectedUser.email} has been deleted`,
@@ -138,7 +121,7 @@ export default function AdminUsersPage() {
       u.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  if (authLoading || isLoading) {
+  if (authLoading || usersLoading) {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-64">

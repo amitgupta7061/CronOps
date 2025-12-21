@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { adminApi, User } from "@/lib/api";
 import { useAuthStore } from "@/lib/store";
+import { useAdminStore } from "@/lib/admin-store";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Users,
@@ -20,45 +20,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-interface AdminStats {
-  users: {
-    total: number;
-    verified: number;
-    unverified: number;
-  };
-  jobs: {
-    total: number;
-    active: number;
-    paused: number;
-  };
-  executions: {
-    total: number;
-    successful: number;
-    failed: number;
-    successRate: number;
-  };
-  recentUsers: User[];
-  recentExecutions: Array<{
-    id: string;
-    status: string;
-    startedAt: string;
-    duration: number;
-    cronJob: {
-      id: string;
-      name: string;
-      user: {
-        email: string;
-      };
-    };
-  }>;
-}
-
 export default function AdminDashboard() {
   const router = useRouter();
   const { user, isLoading: authLoading } = useAuthStore();
+  const { stats, statsLoading, fetchStats } = useAdminStore();
   const { toast } = useToast();
-  const [stats, setStats] = useState<AdminStats | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (!authLoading && (!user || user.role !== "ADMIN")) {
@@ -67,27 +33,21 @@ export default function AdminDashboard() {
     }
 
     if (user?.role === "ADMIN") {
-      fetchStats();
+      fetchStats().catch(() => {
+        toast({
+          title: "Error",
+          description: "Failed to load admin stats",
+          variant: "destructive",
+        });
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, authLoading, router]);
 
-  const fetchStats = async () => {
-    try {
-      const response = await adminApi.getStats();
-      setStats(response.data.data);
-    } catch {
-      toast({
-        title: "Error",
-        description: "Failed to load admin stats",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // Show loading if auth is loading, or if we're fetching stats, or if stats haven't been loaded yet
+  const isLoadingStats = authLoading || statsLoading || (!stats && user?.role === "ADMIN");
 
-  if (authLoading || isLoading) {
+  if (isLoadingStats) {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-64">

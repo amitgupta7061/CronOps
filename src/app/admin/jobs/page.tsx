@@ -14,8 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { adminApi, CronJob } from "@/lib/api";
 import { useAuthStore } from "@/lib/store";
+import { useAdminStore } from "@/lib/admin-store";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Briefcase,
@@ -28,23 +28,13 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-interface JobWithUser extends CronJob {
-  user: {
-    id: string;
-    email: string;
-    name: string;
-  };
-  executionCount: number;
-}
-
 export default function AdminJobsPage() {
   const router = useRouter();
   const { user: currentUser, isLoading: authLoading } = useAuthStore();
+  const { jobs, jobsLoading, jobsStatusFilter, fetchJobs } = useAdminStore();
   const { toast } = useToast();
-  const [jobs, setJobs] = useState<JobWithUser[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>(jobsStatusFilter);
 
   useEffect(() => {
     if (!authLoading && (!currentUser || currentUser.role !== "ADMIN")) {
@@ -53,28 +43,16 @@ export default function AdminJobsPage() {
     }
 
     if (currentUser?.role === "ADMIN") {
-      fetchJobs();
+      fetchJobs(statusFilter).catch(() => {
+        toast({
+          title: "Error",
+          description: "Failed to load jobs",
+          variant: "destructive",
+        });
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, authLoading, router, statusFilter]);
-
-  const fetchJobs = async () => {
-    try {
-      const response = await adminApi.getAllJobs({
-        limit: 100,
-        status: statusFilter !== "all" ? statusFilter : undefined,
-      });
-      setJobs(response.data.data.jobs);
-    } catch {
-      toast({
-        title: "Error",
-        description: "Failed to load jobs",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const filteredJobs = jobs.filter(
     (job) =>
@@ -82,7 +60,7 @@ export default function AdminJobsPage() {
       job.user.email.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  if (authLoading || isLoading) {
+  if (authLoading || jobsLoading) {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-64">

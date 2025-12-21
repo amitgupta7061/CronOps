@@ -13,8 +13,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { adminApi } from "@/lib/api";
 import { useAuthStore } from "@/lib/store";
+import { useAdminStore } from "@/lib/admin-store";
 import { useToast } from "@/components/ui/use-toast";
 import {
   Activity,
@@ -28,32 +28,12 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-interface LogWithJob {
-  id: string;
-  status: string;
-  responseCode?: number;
-  responseBody?: string;
-  errorMessage?: string;
-  startedAt: string;
-  finishedAt?: string;
-  duration?: number;
-  cronJob: {
-    id: string;
-    name: string;
-    user: {
-      id: string;
-      email: string;
-    };
-  };
-}
-
 export default function AdminLogsPage() {
   const router = useRouter();
   const { user: currentUser, isLoading: authLoading } = useAuthStore();
+  const { logs, logsLoading, logsStatusFilter, fetchLogs } = useAdminStore();
   const { toast } = useToast();
-  const [logs, setLogs] = useState<LogWithJob[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>(logsStatusFilter);
 
   useEffect(() => {
     if (!authLoading && (!currentUser || currentUser.role !== "ADMIN")) {
@@ -62,28 +42,16 @@ export default function AdminLogsPage() {
     }
 
     if (currentUser?.role === "ADMIN") {
-      fetchLogs();
+      fetchLogs(statusFilter).catch(() => {
+        toast({
+          title: "Error",
+          description: "Failed to load logs",
+          variant: "destructive",
+        });
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentUser, authLoading, router, statusFilter]);
-
-  const fetchLogs = async () => {
-    try {
-      const response = await adminApi.getAllLogs({
-        limit: 100,
-        status: statusFilter !== "all" ? statusFilter : undefined,
-      });
-      setLogs(response.data.data.logs);
-    } catch {
-      toast({
-        title: "Error",
-        description: "Failed to load logs",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const getStatusIcon = (status: string) => {
     switch (status.toUpperCase()) {
@@ -115,7 +83,7 @@ export default function AdminLogsPage() {
     }
   };
 
-  if (authLoading || isLoading) {
+  if (authLoading || logsLoading) {
     return (
       <DashboardLayout>
         <div className="flex items-center justify-center h-64">
