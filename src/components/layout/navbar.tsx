@@ -14,6 +14,7 @@ import {
   Menu,
   X,
   CreditCard,
+  BarChart3,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuthStore } from "@/lib/store";
@@ -33,6 +34,7 @@ const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, roles: ["USER"] },
   { name: "Jobs", href: "/jobs", icon: Calendar, roles: ["USER"] },
   { name: "Logs", href: "/logs", icon: Clock, roles: ["USER"] },
+  { name: "Analytics", href: "/analytics", icon: BarChart3, roles: ["USER"] },
   { name: "Pricing", href: "/pricing", icon: CreditCard, roles: ["USER"] },
 ];
 

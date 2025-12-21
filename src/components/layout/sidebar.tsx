@@ -14,6 +14,7 @@ import {
   Menu,
   X,
   Shield,
+  BarChart3,
 } from "lucide-react";
 import { useState } from "react";
 import { useAuthStore } from "@/lib/store";
@@ -31,6 +32,7 @@ import { cn } from "@/lib/utils";
 const navigation: { name: string; href: string; icon: React.ComponentType<{ className?: string }>; adminOnly?: boolean }[] = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Jobs", href: "/jobs", icon: Clock },
+  { name: "Analytics", href: "/analytics", icon: BarChart3 },
   { name: "Admin", href: "/admin", icon: Shield, adminOnly: true },
 ];
 

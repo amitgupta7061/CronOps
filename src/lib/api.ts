@@ -106,11 +106,13 @@ export const logsApi = {
 export const statsApi = {
   getDashboard: () => api.get("/stats"),
   getStats: () => api.get("/stats"),
+  getAnalytics: (params?: { days?: number }) => api.get("/stats/analytics", { params }),
 };
 
 // Admin API
 export const adminApi = {
   getStats: () => api.get("/admin/stats"),
+  getAnalytics: (params?: { days?: number }) => api.get("/admin/analytics", { params }),
   getUsers: (params?: { page?: number; limit?: number }) =>
     api.get("/admin/users", { params }),
   getUserById: (id: string) => api.get(`/admin/users/${id}`),
