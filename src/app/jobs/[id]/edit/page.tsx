@@ -4,6 +4,7 @@ import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   Clock,
@@ -76,6 +77,7 @@ export default function EditJobPage({
   const { id } = use(params);
   const router = useRouter();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [job, setJob] = useState<CronJob | null>(null);
@@ -187,6 +189,12 @@ export default function EditJobPage({
         maxRetries: formData.retryCount,
         timeout: formData.timeout * 1000, // Convert seconds to milliseconds
       } as Partial<CronJob>);
+
+      // Invalidate all related caches to refresh data
+      await queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      await queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      await queryClient.invalidateQueries({ queryKey: ["dashboard-jobs"] });
+      await queryClient.invalidateQueries({ queryKey: ["job", id] });
 
       toast({
         title: "Job updated",

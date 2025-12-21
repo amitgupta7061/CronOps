@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Check, X, Loader2 } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { DashboardLayout } from "@/components/layout/dashboard-layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -63,6 +64,7 @@ const plans = [
 export default function PricingPage() {
   const { user, checkAuth } = useAuthStore();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
 
   const handleUpgrade = async (planId: Plan) => {
@@ -71,12 +73,16 @@ export default function PricingPage() {
       await usersApi.updatePlan(planId);
       await checkAuth(); // Refresh user state
       
+      // Invalidate related caches to reflect new plan limits
+      await queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      await queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      
       toast({
         title: "Plan Updated",
         description: `You remain now on the ${planId} plan.`,
         variant: "success",
       });
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to update plan. Please try again.",

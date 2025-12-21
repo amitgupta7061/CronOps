@@ -106,6 +106,9 @@ export default function JobsPage() {
   const handleRunNow = async (job: CronJob) => {
     try {
       await jobsApi.runNow(job.id);
+      // Invalidate logs cache so logs page shows new execution
+      await queryClient.invalidateQueries({ queryKey: ["logs"] });
+      await queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       toast({
         title: "Job triggered",
         description: `${job.name} has been queued for immediate execution.`,

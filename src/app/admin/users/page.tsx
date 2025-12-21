@@ -42,7 +42,7 @@ import Link from "next/link";
 export default function AdminUsersPage() {
   const router = useRouter();
   const { user: currentUser, isLoading: authLoading } = useAuthStore();
-  const { users, usersLoading, fetchUsers, updateUserInCache, removeUserFromCache } = useAdminStore();
+  const { users, usersLoading, fetchUsers, fetchStats, updateUserInCache, removeUserFromCache } = useAdminStore();
   const { toast } = useToast();
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUser, setSelectedUser] = useState<UserWithCount | null>(null);
@@ -99,6 +99,8 @@ export default function AdminUsersPage() {
     try {
       await adminApi.deleteUser(selectedUser.id);
       removeUserFromCache(selectedUser.id);
+      // Force refresh stats since user count changed
+      fetchStats(true).catch(() => {});
       toast({
         title: "User deleted",
         description: `${selectedUser.email} has been deleted`,

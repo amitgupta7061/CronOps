@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   Clock,
@@ -70,6 +71,7 @@ interface HeaderEntry {
 export default function NewJobPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const [jobType, setJobType] = useState<"http" | "script">("http");
   const [headers, setHeaders] = useState<HeaderEntry[]>([{ key: "", value: "" }]);
@@ -131,6 +133,11 @@ export default function NewJobPage() {
         maxRetries: formData.retryCount,
         timeout: formData.timeout * 1000, // Convert seconds to milliseconds
       });
+
+      // Invalidate all related caches to refresh data
+      await queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      await queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      await queryClient.invalidateQueries({ queryKey: ["dashboard-jobs"] });
 
       toast({
         title: "Job created",

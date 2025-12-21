@@ -4,6 +4,7 @@ import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   ArrowLeft,
   Clock,
@@ -53,6 +54,7 @@ export default function JobDetailPage({
   const { id } = use(params);
   const router = useRouter();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [job, setJob] = useState<CronJob | null>(null);
   const [logs, setLogs] = useState<ExecutionLog[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -110,13 +112,16 @@ export default function JobDetailPage({
     if (!job) return;
     try {
       await jobsApi.runNow(id);
+      // Invalidate logs cache so logs page shows new execution
+      await queryClient.invalidateQueries({ queryKey: ["logs"] });
+      await queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
       toast({
         title: "Job triggered",
         description: `${job.name} has been queued for immediate execution.`,
       });
-      // Refresh logs after a short delay
+      // Also refresh local logs after a short delay
       setTimeout(fetchData, 2000);
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to trigger job",
@@ -130,12 +135,17 @@ export default function JobDetailPage({
     setIsDeleting(true);
     try {
       await jobsApi.delete(id);
+      // Invalidate all related caches
+      await queryClient.invalidateQueries({ queryKey: ["jobs"] });
+      await queryClient.invalidateQueries({ queryKey: ["logs"] });
+      await queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] });
+      await queryClient.invalidateQueries({ queryKey: ["dashboard-jobs"] });
       toast({
         title: "Job deleted",
         description: `${job.name} has been deleted.`,
       });
       router.push("/jobs");
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to delete job",
