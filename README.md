@@ -10,13 +10,18 @@ A modern, responsive web application for managing cron jobs built with Next.js 1
 ## Features
 
 - 🔐 **Authentication** - Secure login/signup with OTP email verification
+- 🔑 **Password Reset** - Forgot password flow with email reset links
 - 📊 **Dashboard** - Real-time overview of jobs, executions, and success rates
+- 📈 **Analytics** - Charts and insights for execution trends and status breakdowns
 - ⏰ **Job Management** - Create, edit, pause, resume, and delete cron jobs
 - 📝 **Execution Logs** - Detailed logs with filtering and pagination
 - 👤 **User Settings** - Profile management and password updates
+- 💎 **Subscription Plans** - FREE, PREMIUM, and PRO tiers with job limits
+- 🛡️ **Admin Dashboard** - System-wide stats, user management, and analytics
 - 🌙 **Dark Mode** - Beautiful dark theme support
 - 📱 **Responsive** - Mobile-first design that works on all devices
 - ✨ **Animations** - Smooth transitions with Framer Motion
+- ⚡ **Smart Caching** - TanStack Query for optimized data fetching
 
 ## Tech Stack
 
@@ -25,8 +30,10 @@ A modern, responsive web application for managing cron jobs built with Next.js 1
 - **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
 - **Animations**: [Framer Motion](https://www.framer.com/motion/)
 - **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
+- **Data Fetching**: [TanStack Query](https://tanstack.com/query)
 - **HTTP Client**: [Axios](https://axios-http.com/)
 - **UI Components**: [Radix UI](https://www.radix-ui.com/)
+- **Charts**: [Recharts](https://recharts.org/)
 - **Icons**: [Lucide React](https://lucide.dev/)
 - **Date Utilities**: [date-fns](https://date-fns.org/)
 
@@ -35,7 +42,15 @@ A modern, responsive web application for managing cron jobs built with Next.js 1
 ```
 src/
 ├── app/                    # Next.js App Router pages
+│   ├── admin/              # Admin pages
+│   │   ├── analytics/      # System-wide analytics
+│   │   ├── jobs/           # All jobs management
+│   │   ├── logs/           # All execution logs
+│   │   └── users/          # User management
+│   ├── analytics/          # User analytics page
 │   ├── dashboard/          # Dashboard page
+│   ├── forgot-password/    # Password reset request
+│   ├── reset-password/     # Password reset form
 │   ├── jobs/               # Job management pages
 │   │   ├── [id]/           # Job details & edit
 │   │   └── new/            # Create new job
@@ -43,28 +58,20 @@ src/
 │   ├── login/              # Login page
 │   ├── signup/             # Signup page
 │   ├── verify/             # OTP verification page
+│   ├── pricing/            # Subscription plans page
 │   ├── settings/           # User settings page
 │   ├── layout.tsx          # Root layout
 │   └── page.tsx            # Landing page
 ├── components/
 │   ├── layout/             # Layout components
 │   │   ├── dashboard-layout.tsx
-│   │   └── navbar.tsx
+│   │   ├── navbar.tsx
+│   │   └── sidebar.tsx
 │   └── ui/                 # Reusable UI components
-│       ├── badge.tsx
-│       ├── button.tsx
-│       ├── card.tsx
-│       ├── dialog.tsx
-│       ├── dropdown-menu.tsx
-│       ├── input.tsx
-│       ├── label.tsx
-│       ├── select.tsx
-│       ├── tabs.tsx
-│       ├── toast.tsx
-│       └── ...
 └── lib/
     ├── api.ts              # API client & endpoints
-    ├── store.ts            # Zustand state management
+    ├── store.ts            # Zustand auth state
+    ├── admin-store.ts      # Admin data caching
     └── utils.ts            # Utility functions
 ```
 
@@ -132,6 +139,8 @@ const api = axios.create({
 - **`/login`** - User login
 - **`/signup`** - User registration
 - **`/verify`** - OTP email verification
+- **`/forgot-password`** - Request password reset email
+- **`/reset-password`** - Reset password with token
 
 ### Protected Pages (requires authentication)
 - **`/dashboard`** - Overview with stats, recent jobs, and executions
@@ -140,7 +149,16 @@ const api = axios.create({
 - **`/jobs/[id]`** - View job details and execution history
 - **`/jobs/[id]/edit`** - Edit an existing job
 - **`/logs`** - View all execution logs with filtering
+- **`/analytics`** - Charts for execution trends and statistics
+- **`/pricing`** - View and upgrade subscription plans
 - **`/settings`** - User profile and password management
+
+### Admin Pages (requires ADMIN role)
+- **`/admin`** - System-wide dashboard with stats
+- **`/admin/users`** - User management (role changes, deletion)
+- **`/admin/jobs`** - View all jobs across users
+- **`/admin/logs`** - View all execution logs
+- **`/admin/analytics`** - System-wide analytics and charts
 
 ## API Integration
 
