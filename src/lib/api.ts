@@ -70,6 +70,10 @@ export const authApi = {
     api.put("/auth/me", data),
   changePassword: (data: { currentPassword: string; newPassword: string }) =>
     api.put("/auth/password", data),
+  forgotPassword: (data: { email: string }) =>
+    api.post("/auth/forgot-password", data),
+  resetPassword: (data: { token: string; password: string }) =>
+    api.post("/auth/reset-password", data),
 };
 
 // Jobs API
