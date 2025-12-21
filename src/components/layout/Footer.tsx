@@ -3,8 +3,8 @@ import { Clock, Github, Twitter, Linkedin } from "lucide-react";
 
 const footerLinks = {
   product: [
-    { name: "Features", href: "#features" },
-    { name: "Pricing", href: "/pricing" },
+    { name: "Features", href: "/#features" },
+    { name: "Pricing", href: "/#pricing" },
     { name: "Docs", href: "/docs" },
     { name: "Changelog", href: "/changelog" },
   ],
@@ -20,9 +20,9 @@ const footerLinks = {
     { name: "Security", href: "/security" },
   ],
   social: [
-    { name: "GitHub", href: "https://github.com", icon: Github },
-    { name: "Twitter", href: "https://twitter.com", icon: Twitter },
-    { name: "LinkedIn", href: "https://linkedin.com", icon: Linkedin },
+    { name: "GitHub", href: "https://github.com/amitgupta7061", icon: Github },
+    { name: "Twitter", href: "https://x.com/AmitGup43573754", icon: Twitter },
+    { name: "LinkedIn", href: "https://www.linkedin.com/in/amit-kumar-gupta-96649729a/", icon: Linkedin },
   ],
 };
 
