@@ -14,7 +14,8 @@ import {
   Terminal, 
   Rocket,
   CheckCircle2,
-  Quote
+  Quote,
+  Check
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/layout/navbar";
@@ -81,6 +82,48 @@ const steps = [
     title: "Monitor & Track",
     description: "Watch executions in real-time and get notified if anything goes wrong."
   }
+];
+
+const pricingPlans = [
+  {
+    name: "Free",
+    price: 0,
+    description: "Perfect for getting started",
+    features: [
+      "3 Active Cron Jobs",
+      "Standard Support",
+      "Basic Analytics",
+      "1 Minute Resolution",
+    ],
+    popular: false,
+  },
+  {
+    name: "Premium",
+    price: 50,
+    description: "For growing needs",
+    features: [
+      "100 Active Cron Jobs",
+      "Priority Support",
+      "Advanced Analytics",
+      "30 Second Resolution",
+      "Email Notifications",
+    ],
+    popular: true,
+  },
+  {
+    name: "Pro",
+    price: 100,
+    description: "For power users & teams",
+    features: [
+      "Unlimited Cron Jobs",
+      "24/7 Dedicated Support",
+      "Real-time Analytics",
+      "1 Second Resolution",
+      "Webhook Integrations",
+      "Team Management",
+    ],
+    popular: false,
+  },
 ];
 
 const testimonials = [
@@ -306,8 +349,70 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Pricing Section */}
+        <section id="pricing" className="py-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-16">
+              <h2 className="text-3xl font-bold text-foreground sm:text-4xl">
+                Simple, transparent pricing
+              </h2>
+              <p className="mt-4 text-lg text-muted-foreground">
+                Choose the perfect plan for your automation needs
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {pricingPlans.map((plan, index) => (
+                <motion.div
+                  key={plan.name}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                  className={`relative rounded-2xl border ${
+                    plan.popular 
+                      ? "border-primary shadow-lg shadow-primary/20 scale-105" 
+                      : "border-border"
+                  } bg-card p-8 flex flex-col`}
+                >
+                  {plan.popular && (
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                      <span className="bg-primary text-primary-foreground px-4 py-1 rounded-full text-sm font-medium">
+                        Most Popular
+                      </span>
+                    </div>
+                  )}
+                  <div className="mb-6">
+                    <h3 className="text-2xl font-bold text-foreground">{plan.name}</h3>
+                    <p className="text-muted-foreground mt-1">{plan.description}</p>
+                  </div>
+                  <div className="mb-6">
+                    <span className="text-4xl font-bold text-foreground">${plan.price}</span>
+                    <span className="text-muted-foreground">/month</span>
+                  </div>
+                  <ul className="space-y-3 mb-8 flex-1">
+                    {plan.features.map((feature) => (
+                      <li key={feature} className="flex items-center text-sm text-foreground/80">
+                        <Check className="h-4 w-4 text-green-500 mr-3 shrink-0" />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link href="/signup">
+                    <Button 
+                      className="w-full" 
+                      variant={plan.popular ? "default" : "outline"}
+                    >
+                      Get Started
+                    </Button>
+                  </Link>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* Testimonials */}
-        <section className="py-24">
+        <section className="py-24 bg-card/30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl font-bold text-foreground sm:text-4xl">
