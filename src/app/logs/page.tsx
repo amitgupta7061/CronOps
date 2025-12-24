@@ -178,7 +178,7 @@ export default function LogsPage() {
           </Card>
         ) : (
           <div className="space-y-4">
-            {logs.map((log, index) => (
+            {logs.map((log: ExecutionLog, index: number) => (
               <motion.div
                 key={log.id}
                 initial={{ opacity: 0, y: 10 }}
