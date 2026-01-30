@@ -45,7 +45,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} antialiased`}>
         <Providers>
-          <ThemeProvider defaultTheme="system" storageKey="cronops-theme">
+          <ThemeProvider defaultTheme="light" storageKey="cronops-theme">
             {children}
             <Toaster />
           </ThemeProvider>
